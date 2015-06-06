@@ -1,0 +1,25 @@
+package nlp
+
+const (
+	MOD_CONFIG = 1 + iota
+	MOD_TAG_SET
+	MOD_TOKENIZER
+	MOD_SPLITTER
+	MOD_ACCENT_DEFAULT
+	MOD_ACCENT_ES
+	MOD_AFFIX
+	MOD_PROBABILITY
+	MOD_DICTIONARY
+	MOD_PUNTS
+	MOD_HMM
+	MOD_LOCUTIONS
+	MOD_LANGUAGE
+	MOD_NER
+	MOD_GRAMMAR
+	MOD_CHART
+)
+
+type Pair struct {
+	first  interface{}
+	second interface{}
+}
