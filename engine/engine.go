@@ -5,9 +5,10 @@ import (
 	"sync"
 	"time"
 
-	"../nlp"
-	. "../terminal"
 	"github.com/cheggaaa/pb"
+
+	"github.com/advancedlogic/go-freeling/nlp"
+	"github.com/advancedlogic/go-freeling/terminal"
 )
 
 type Engine struct {

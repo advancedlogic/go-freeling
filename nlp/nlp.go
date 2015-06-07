@@ -5,9 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"../models"
 	"github.com/kdar/factorlog"
 	set "gopkg.in/fatih/set.v0"
+
+	"github.com/advancedlogic/go-freeling/models"
 )
 
 var LOG *factorlog.FactorLog
