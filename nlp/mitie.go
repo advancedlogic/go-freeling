@@ -66,29 +66,14 @@ void releaseDets(mitie_named_entity_detections* dets) {
 import "C"
 
 import (
+	"container/list"
 	"fmt"
 	"unsafe"
 
 	"github.com/abiosoft/semaphore"
+	"github.com/advancedlogic/go-freeling/models"
+	set "gopkg.in/fatih/set.v0"
 )
-
-type Entity struct {
-	model string
-	prob  float64
-	value string
-}
-
-func NewEntity(model string, prob float64, value string) *Entity {
-	return &Entity{
-		model: model,
-		prob:  prob,
-		value: value,
-	}
-}
-
-func (this *Entity) String() string {
-	return fmt.Sprintf("%s:%0.3f:%s", this.model, this.prob, this.value)
-}
 
 type MITIE struct {
 	ner *C.mitie_named_entity_extractor
@@ -108,15 +93,28 @@ func (this *MITIE) Release() {
 	C.mitie_free(unsafe.Pointer(this.ner))
 }
 
-func (this *MITIE) Process(body string) {
+func (this *MITIE) Process(body string) *list.List {
 	tokens := C.mitie_tokenize(C.CString(body))
 	defer C.mitie_free(unsafe.Pointer(tokens))
 	dets := C.mitie_extract_entities(this.ner, tokens)
 	defer C.mitie_free(unsafe.Pointer(dets))
 	num_dets := C.mitie_ner_get_num_detections(dets)
+	duplicates := set.New()
+	entites := list.New()
 	for i := 0; i < int(num_dets); i++ {
 		centity := C.get_entity(tokens, dets, C.ulong(i))
-		entity := NewEntity(C.GoString(centity.model), float64(centity.score), C.GoString(centity.value))
-		println(entity.String())
+		model := C.GoString(centity.model)
+		score := float64(centity.score)
+		value := C.GoString(centity.value)
+		key := fmt.Sprintf("%s:%s", value, model)
+		if duplicates.Has(key) {
+			continue
+		}
+		duplicates.Add(key)
+		if score > 0.5 {
+			entity := models.NewEntity(model, score, value)
+			entites.PushBack(entity)
+		}
 	}
+	return entites
 }
