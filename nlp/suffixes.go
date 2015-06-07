@@ -325,7 +325,9 @@ func (this *Affixes) ApplyRule(r string, la *list.List, aff string, suf *sufrule
 
 			suflem := *list.New()
 			tmpItems := Split(suf.lema, "+")
-			for _, tmpItem := range tmpItems { suflem.PushBack(tmpItem)}
+			for _, tmpItem := range tmpItems {
+				suflem.PushBack(tmpItem)
+			}
 			lem = ""
 			for s := suflem.Front(); s != nil; s = s.Next() {
 				if string(s.Value.(string)[0]) == "F" {
@@ -378,10 +380,14 @@ func (this *Affixes) CheckRetokenizable(suf *sufrule, form string, lem string, t
 
 		forms := list.New()
 		tmpItems := Split(suf.retok[0:i], "+")
-		for _, tmpItem := range tmpItems { forms.PushBack(tmpItem)}
+		for _, tmpItem := range tmpItems {
+			forms.PushBack(tmpItem)
+		}
 		tags := list.New()
 		tmpItems = Split(suf.retok[i+1:], "+")
-		for _, tmpItem := range tmpItems { forms.PushBack(tmpItem)}
+		for _, tmpItem := range tmpItems {
+			forms.PushBack(tmpItem)
+		}
 
 		a := &Analysis{}
 		first := true

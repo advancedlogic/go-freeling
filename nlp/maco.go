@@ -59,11 +59,11 @@ func (this *MacoOptions) SetRetokContractions(b bool) {
 
 type Maco struct {
 	MultiwordsDetection, NumbersDetection, PunctuationDetection, DatesDetection, QuantitiesDetection, DictionarySearch, ProbabilityAssignment, UserMap, NERecognition bool
-	loc *Locutions
-	dic  *Dictionary
-	prob *Probability
-	punct *Punts
-	npm *NER
+	loc                                                                                                                                                               *Locutions
+	dic                                                                                                                                                               *Dictionary
+	prob                                                                                                                                                              *Probability
+	punct                                                                                                                                                             *Punts
+	npm                                                                                                                                                               *NER
 	/*
 		numb *Numbers
 		dates *Dates
@@ -92,7 +92,7 @@ func NewMaco(opts *MacoOptions) *Maco {
 	}
 
 	if opts.DictionaryFile != "" {
-		this.dic = NewDictionary(opts.Lang, opts.DictionaryFile,opts.AffixFile,opts.CompoundFile,opts.InverseDict,opts.RetokContractions)
+		this.dic = NewDictionary(opts.Lang, opts.DictionaryFile, opts.AffixFile, opts.CompoundFile, opts.InverseDict, opts.RetokContractions)
 		this.DictionarySearch = true
 	}
 

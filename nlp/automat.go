@@ -13,7 +13,7 @@ type AutomatStatus struct {
 
 type Automat struct {
 	initialState int
-	stopState int
-	trans [AUTOMAT_MAX_STATES][AUTOMAT_MAX_TOKENS]int
-	final *set.Set
+	stopState    int
+	trans        [AUTOMAT_MAX_STATES][AUTOMAT_MAX_TOKENS]int
+	final        *set.Set
 }

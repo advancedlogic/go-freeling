@@ -18,7 +18,7 @@ func NewAccetsDefault() *AccentsDefault {
 }
 
 func (this *AccentsDefault) FixAccentuation(candidates *set.Set, suf *sufrule) {
-	LOG.Trace("Default accentuation. Candidates "+candidates.String())
+	LOG.Trace("Default accentuation. Candidates " + candidates.String())
 }
 
 type AccentsES struct {
@@ -41,5 +41,5 @@ func NewAccentsES() *AccentsES {
 }
 
 func (this *AccentsES) FixAccentuation(candidates *set.Set, suf *sufrule) {
-	LOG.Trace("ES accentuation. Candidates "+candidates.String())
+	LOG.Trace("ES accentuation. Candidates " + candidates.String())
 }

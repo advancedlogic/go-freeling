@@ -14,12 +14,12 @@ type ProcessorStatus struct {
 }
 
 type Analysis struct {
-	lemma       string
-	tag         string
-	prob        float64
-	distance    float64
-	senses      *list.List
-	retok       *list.List
+	lemma         string
+	tag           string
+	prob          float64
+	distance      float64
+	senses        *list.List
+	retok         *list.List
 	selectedKBest *set.Set
 
 	User []string
@@ -27,24 +27,24 @@ type Analysis struct {
 
 func NewAnalysis(lemma string, tag string) *Analysis {
 	return &Analysis{
-		lemma:       lemma,
-		tag:         tag,
-		prob:        -1.0,
-		distance:    -1.0,
-		senses:      list.New(),
-		retok:       list.New(),
+		lemma:         lemma,
+		tag:           tag,
+		prob:          -1.0,
+		distance:      -1.0,
+		senses:        list.New(),
+		retok:         list.New(),
 		selectedKBest: set.New(),
 	}
 }
 
 func NewAnalysisFromAnalysis(a *Analysis) *Analysis {
 	this := Analysis{
-		lemma:       a.lemma,
-		tag:         a.tag,
-		prob:        a.prob,
-		distance:    a.distance,
-		senses:      list.New(),
-		retok:       list.New(),
+		lemma:         a.lemma,
+		tag:           a.tag,
+		prob:          a.prob,
+		distance:      a.distance,
+		senses:        list.New(),
+		retok:         list.New(),
 		selectedKBest: set.New(a.selectedKBest),
 	}
 

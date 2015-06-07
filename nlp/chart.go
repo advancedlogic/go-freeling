@@ -73,10 +73,10 @@ func NewEdgeFromEdge(edge *Edge) *Edge {
 	matched.PushBackList(edge.matched)
 	backpath := list.New()
 	backpath.PushBackList(edge.backpath)
-	this := Edge {
-		matched : matched,
+	this := Edge{
+		matched:  matched,
 		backpath: backpath,
-		Rule: NewRuleFromRule(edge.Rule),
+		Rule:     NewRuleFromRule(edge.Rule),
 	}
 	return &this
 }

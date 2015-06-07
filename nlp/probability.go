@@ -209,7 +209,7 @@ func (this *Probability) AnnotateWord(w *Word) {
 		this.smoothing(w)
 		sum = 1
 	} else if this.activateGuesser {
-		TRACE(2, "Form with NO analysis. Guessing " + w.getForm(), MOD_PROBABILITY)
+		TRACE(2, "Form with NO analysis. Guessing "+w.getForm(), MOD_PROBABILITY)
 		var mass float64 = 1.0
 		for li := w.Front(); li != nil; li = li.Next() {
 			li.Value.(*Analysis).setProb(mass / float64(w.getNAnalysis()))

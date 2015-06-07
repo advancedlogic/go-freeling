@@ -3,11 +3,11 @@ package nlp
 import (
 	"container/list"
 	"io/ioutil"
-	"strings"
 	"math"
 	"regexp"
-	"strconv"
 	"sort"
+	"strconv"
+	"strings"
 )
 
 const VERTEX_NOT_FOUND = -1
@@ -32,23 +32,23 @@ type CSRKB struct {
 }
 
 type IntPair struct {
-	first int
+	first  int
 	second int
 }
 
 type IntPairsArray []IntPair
 
-func (a IntPairsArray) Less(i,j int) bool {
+func (a IntPairsArray) Less(i, j int) bool {
 	return a[i].first < a[j].first || (a[i].first == a[j].first && a[i].second < a[j].second)
 }
 
 func (a IntPairsArray) Len() int { return len(a) }
 
-func (a IntPairsArray) Swap(i,j int) { a[i], a[j] = a[j], a[i] }
+func (a IntPairsArray) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 
 func List2IntPairsArray(ls *list.List) []IntPair {
 	out := make([]IntPair, ls.Len())
-	for i, l := 0, ls.Front(); i < ls.Len() && l != nil; i, l = i + 1, l.Next() {
+	for i, l := 0, ls.Front(); i < ls.Len() && l != nil; i, l = i+1, l.Next() {
 		out[i] = l.Value.(IntPair)
 	}
 	return out
@@ -64,10 +64,10 @@ func IntPairsArray2List(a IntPairsArray) *list.List {
 
 func NewCSRKB(kbFile string, nit int, thr float64, damp float64) *CSRKB {
 	this := CSRKB{
-		vertexIndex : make(map[string]int),
-		maxIterations : nit,
-		threshold : thr,
-		damping : damp,
+		vertexIndex:   make(map[string]int),
+		maxIterations: nit,
+		threshold:     thr,
+		damping:       damp,
 	}
 
 	var syn1, syn2 string
@@ -93,12 +93,11 @@ func NewCSRKB(kbFile string, nit int, thr float64, damp float64) *CSRKB {
 		if syn2 != "-" {
 			pos2 = this.addVertex(syn2)
 
-			rels.PushBack(IntPair{pos1,pos2})
-			rels.PushBack(IntPair{pos2,pos1})
+			rels.PushBack(IntPair{pos1, pos2})
+			rels.PushBack(IntPair{pos2, pos1})
 		}
 
 	}
-
 
 	this.fillCSRTables(this.numVertices, rels)
 	return &this
@@ -126,7 +125,7 @@ func (this *CSRKB) fillCSRTables(nv int, rels *list.List) {
 			p = p.Next()
 		}
 		this.numEdges[n] = r - this.firstEdge[n]
-		this.outCoef[n] = 1/float64(this.numEdges[n])
+		this.outCoef[n] = 1 / float64(this.numEdges[n])
 		n++
 	}
 }
@@ -164,12 +163,12 @@ func (this *CSRKB) pageRank(pv []float64) {
 
 		for v := 0; v < this.numVertices; v++ {
 			rank := 0.0
-			for e := this.firstEdge[v]; e < this.firstEdge[v] + this.numEdges[v]; e++ {
+			for e := this.firstEdge[v]; e < this.firstEdge[v]+this.numEdges[v]; e++ {
 				u := this.edges[e]
 				rank += ranks[CURRENT][u] * this.outCoef[u]
 			}
 
-			ranks[NEXT][v] = rank * this.damping + pv[v] * (1 - this.damping)
+			ranks[NEXT][v] = rank*this.damping + pv[v]*(1-this.damping)
 			change += math.Abs(ranks[NEXT][v] - ranks[CURRENT][v])
 			//println(ranks[NEXT][v], change, rank, this.damping, pv[v])
 		}
@@ -184,13 +183,13 @@ func (this *CSRKB) pageRank(pv []float64) {
 }
 
 type UKB struct {
-	wn *CSRKB
+	wn       *CSRKB
 	RE_wnpos *regexp.Regexp
 }
 
 func NewUKB(wsdFile string) *UKB {
-	this := UKB {
-		RE_wnpos : regexp.MustCompile(RE_WNP),
+	this := UKB{
+		RE_wnpos: regexp.MustCompile(RE_WNP),
 	}
 
 	path := wsdFile[0:strings.LastIndex(wsdFile, "/")]
@@ -214,29 +213,32 @@ func NewUKB(wsdFile string) *UKB {
 	for cfg.GetContentLine(&line) {
 		items := Split(line, " ")
 		switch cfg.GetSection() {
-			case UKB_RELATION_FILE: {
+		case UKB_RELATION_FILE:
+			{
 				fname := items[0]
 				if strings.HasPrefix(fname, "../") {
 					wsdFile = strings.Replace(wsdFile, "./", "", -1)
 					path = wsdFile[0:strings.Index(wsdFile, "/")]
 					relFile = path + "/" + strings.Replace(fname, "../", "", -1)
 				} else {
-					relFile = path+"/"+strings.Replace(fname, "./", "", -1)
+					relFile = path + "/" + strings.Replace(fname, "./", "", -1)
 				}
 				break
 			}
-			case UKB_REX_WNPOS: {
+		case UKB_REX_WNPOS:
+			{
 				this.RE_wnpos = regexp.MustCompile(line)
 				break
 			}
-			case UKB_PR_PARAMS: {
+		case UKB_PR_PARAMS:
+			{
 				key := items[0]
 				if key == "Threshold" {
-					thr, _ = strconv.ParseFloat(items[1],  64)
+					thr, _ = strconv.ParseFloat(items[1], 64)
 				} else if key == "MaxIterations" {
 					nit, _ = strconv.Atoi(items[1])
 				} else if key == "Damping" {
-					damp, _ = strconv.ParseFloat(items[1],  64)
+					damp, _ = strconv.ParseFloat(items[1], 64)
 				} else {
 					LOG.Warn("Error: Unkown parameter " + key + " in PageRankParameters section in file " + wsdFile)
 				}
@@ -251,7 +253,7 @@ func NewUKB(wsdFile string) *UKB {
 		LOG.Panic("No relation file provided in UKB configuration file " + wsdFile)
 	}
 
-	this.wn = NewCSRKB(relFile,nit,thr,damp)
+	this.wn = NewCSRKB(relFile, nit, thr, damp)
 
 	return &this
 }
@@ -279,30 +281,30 @@ func (this *UKB) initSynsetVector(ls *list.List, pv []float64) {
 			if syn == VERTEX_NOT_FOUND {
 				LOG.Warn("Unknown synset " + s.Value.(FloatPair).first + " ignored. Please check consistency between sense dictionary and KB")
 			} else {
-				pv[syn] += (1.0 / float64(nw)) * (1.0/float64(nsyn))
+				pv[syn] += (1.0 / float64(nw)) * (1.0 / float64(nsyn))
 			}
 		}
 	}
 }
 
 type FloatPair struct {
-	first string
+	first  string
 	second float64
 }
 
 type FloatPairsArray []FloatPair
 
-func (a FloatPairsArray) Less(i,j int) bool {
+func (a FloatPairsArray) Less(i, j int) bool {
 	return a[i].first < a[j].first || (a[i].first == a[j].first && a[i].second < a[j].second)
 }
 
 func (a FloatPairsArray) Len() int { return len(a) }
 
-func (a FloatPairsArray) Swap(i,j int) { a[i], a[j] = a[j], a[i] }
+func (a FloatPairsArray) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 
 func List2FloatPairsArray(ls *list.List) []FloatPair {
 	out := make([]FloatPair, ls.Len())
-	for i, l := 0, ls.Front(); i < ls.Len() && l != nil; i, l = i + 1, l.Next() {
+	for i, l := 0, ls.Front(); i < ls.Len() && l != nil; i, l = i+1, l.Next() {
 		out[i] = l.Value.(FloatPair)
 	}
 	return out
@@ -315,7 +317,6 @@ func FloatPairsArray2List(a FloatPairsArray) *list.List {
 	}
 	return out
 }
-
 
 func (this *UKB) extractRanksToSentences(ls *list.List, pv []float64) {
 	for s := ls.Front(); s != nil; s = s.Next() {
@@ -332,7 +333,7 @@ func (this *UKB) extractRanksToSentences(ls *list.List, pv []float64) {
 			a := List2FloatPairsArray(lsen)
 			sort.Sort(FloatPairsArray(a))
 			lsen = FloatPairsArray2List(a)
-			w.Value.(*Word).setSenses(lsen,0)
+			w.Value.(*Word).setSenses(lsen, 0)
 		}
 	}
 }
@@ -343,5 +344,3 @@ func (this *UKB) Analyze(ls *list.List) {
 	this.wn.pageRank(pv)
 	this.extractRanksToSentences(ls, pv)
 }
-
-

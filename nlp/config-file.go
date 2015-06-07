@@ -20,7 +20,9 @@ type ConfigFile struct {
 }
 
 func NewConfigFile(skip bool, comment string) ConfigFile {
-	if comment == "" { comment = "##"}
+	if comment == "" {
+		comment = "##"
+	}
 	return ConfigFile{
 		SECTION_NONE:        -1,
 		SECTION_UNKNOWN:     -2,
@@ -90,7 +92,7 @@ func (this *ConfigFile) GetContentLine(line *string) bool {
 				section := this.sectionsOpen[*line]
 				if section == 0 {
 					if !this.skipUnknownSections {
-						LOG.Panic("Opening of unknown section "+*line+" in file "+this.filename)
+						LOG.Panic("Opening of unknown section " + *line + " in file " + this.filename)
 					} else {
 						this.section = this.SECTION_UNKNOWN
 						this.unkName = (*line)[1 : len(*line)-1]
@@ -102,7 +104,7 @@ func (this *ConfigFile) GetContentLine(line *string) bool {
 					LOG.Tracef("Entering section %s in file %s", *line, this.filename)
 				}
 			} else if this.IsCloseSection(*line) {
-				LOG.Error("Unexpected closing of section "+*line+" in file "+this.filename)
+				LOG.Error("Unexpected closing of section " + *line + " in file " + this.filename)
 			} else if !this.IsComment(*line) {
 				LOG.Warnf("Ignoring unexpected non-comment line outside sections %s in file %s\n", *line, this.filename)
 			} else {
@@ -113,25 +115,25 @@ func (this *ConfigFile) GetContentLine(line *string) bool {
 				s := this.sectionsClose[*line]
 				if s == 0 {
 					if !this.skipUnknownSections {
-						LOG.Panic("Closing of unknown section "+*line+" in file "+this.filename)
+						LOG.Panic("Closing of unknown section " + *line + " in file " + this.filename)
 					} else if this.section == this.SECTION_UNKNOWN {
 						if this.unkName != (*line)[2:len(*line)-1] {
-							LOG.Panic("Unexpected closing of unknown section "+*line+" in file "+this.filename)
+							LOG.Panic("Unexpected closing of unknown section " + *line + " in file " + this.filename)
 						} else {
 							LOG.Tracef("Exiting unknown section %s in file %s", *line, this.filename)
 							this.section = this.SECTION_NONE
 						}
 					} else {
-						LOG.Panic("Unexpected section closing "+*line+" in file "+this.filename)
+						LOG.Panic("Unexpected section closing " + *line + " in file " + this.filename)
 					}
 				} else if s != this.section {
-					LOG.Panic("Unexpected closing in section "+*line+" in file "+this.filename)
+					LOG.Panic("Unexpected closing in section " + *line + " in file " + this.filename)
 				} else {
 					LOG.Tracef("Exiting section %s in file %s", *line, this.filename)
 					this.section = this.SECTION_NONE
 				}
 			} else if this.IsOpenSection(*line) {
-				LOG.Panic("Unexpected nested opening of section "+*line+" in file "+this.filename)
+				LOG.Panic("Unexpected nested opening of section " + *line + " in file " + this.filename)
 			} else if this.section != this.SECTION_UNKNOWN && !this.IsComment(*line) {
 				return true
 			}

@@ -4,22 +4,21 @@ import (
 	"regexp"
 )
 
-
 type Lexer struct {
-	rules []*Pair
-	buffer string
+	rules    []*Pair
+	buffer   string
 	beg, end int
-	line int
-	text string
-	rem []string
+	line     int
+	text     string
+	rem      []string
 }
 
 func NewLexer(rs []*Pair) *Lexer {
 	this := Lexer{
-		line : 0,
-		text : "",
-		beg : 0,
-		end : 0,
+		line: 0,
+		text: "",
+		beg:  0,
+		end:  0,
 	}
 
 	this.rules = rs
@@ -68,4 +67,4 @@ func (this *Lexer) getToken(stream string) int {
 }
 
 func (this *Lexer) getText() string { return this.text }
-func (this *Lexer) lineno() int { return this.line }
+func (this *Lexer) lineno() int     { return this.line }

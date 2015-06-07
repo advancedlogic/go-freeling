@@ -3,8 +3,8 @@ package nlp
 import (
 	"container/list"
 	set "gopkg.in/fatih/set.v0"
-	"strings"
 	"io/ioutil"
+	"strings"
 )
 
 const (
@@ -76,7 +76,7 @@ type SemanticDB struct {
 
 func NewSemanticDB(wsdFile string) *SemanticDB {
 	this := SemanticDB{
-		posMap : list.New(),
+		posMap: list.New(),
 	}
 	var formFile, dictFile, wnFile string
 
@@ -140,9 +140,9 @@ func NewSemanticDB(wsdFile string) *SemanticDB {
 			form := items[0]
 			for i := 1; i < len(items); i = i + 2 {
 				lemma := items[i]
-				tag := items[i + 1]
+				tag := items[i+1]
 				if posset.Has(tag) {
-					this.formDict.addDatabase(lemma + " " + tag, form)
+					this.formDict.addDatabase(lemma+" "+tag, form)
 				}
 			}
 		}
@@ -160,11 +160,11 @@ func NewSemanticDB(wsdFile string) *SemanticDB {
 		for _, line := range lines {
 			items := Split(line, " ")
 			sens := items[0]
-			tag := sens[strings.Index(sens,"-") + 1:]
+			tag := sens[strings.Index(sens, "-")+1:]
 			for i := 1; i < len(items); i++ {
 				wd := items[i]
-				this.senseDB.addDatabase("S:" + sens, wd)
-				this.senseDB.addDatabase("W:" + wd + ":" + tag, sens)
+				this.senseDB.addDatabase("S:"+sens, wd)
+				this.senseDB.addDatabase("W:"+wd+":"+tag, sens)
 			}
 		}
 	}
@@ -185,7 +185,7 @@ func (this *SemanticDB) getWordSenses(form string, lemma string, pos string) *li
 	lsen := list.New()
 	for p := searchList.Front(); p != nil; p = p.Next() {
 		LOG.Trace("..searching " + p.Value.(Pair).first.(string) + " " + p.Value.(Pair).second.(string))
-		s := StrArray2StrList(Split(this.senseDB.accessDatabase("W:" + p.Value.(Pair).first.(string) + ":" + p.Value.(Pair).second.(string))," "))
+		s := StrArray2StrList(Split(this.senseDB.accessDatabase("W:"+p.Value.(Pair).first.(string)+":"+p.Value.(Pair).second.(string)), " "))
 		for ss := s.Front(); ss != nil; ss = ss.Next() {
 			lsen.PushBack(ss.Value.(string))
 		}
@@ -194,12 +194,12 @@ func (this *SemanticDB) getWordSenses(form string, lemma string, pos string) *li
 			LOG.Trace("..senses found " + strings.Join(StrList2StrArray(lsen), " "))
 		}
 	}
-	
+
 	return lsen
 }
 
 func (this *SemanticDB) getSenseWords(sens string) *list.List {
-	return StrArray2StrList(Split(this.senseDB.accessDatabase("S:" + sens), " "))
+	return StrArray2StrList(Split(this.senseDB.accessDatabase("S:"+sens), " "))
 }
 
 func (this *SemanticDB) getSenseInfo(syn string) *SenseInfo {
@@ -227,7 +227,7 @@ func (this *SemanticDB) getWNKeys(form string, lemma string, tag string, searchL
 			fms := StrArray2StrList(Split(lm, " "))
 			for ifm := fms.Front(); ifm != nil; ifm = ifm.Next() {
 				LOG.Trace("Adding word '" + form + "' to be searched with pos=" + p.Value.(PosMapRule).pos + " and lemma=" + ifm.Value.(string))
-				searchList.PushBack(Pair{ifm.Value.(string),p.Value.(PosMapRule).wnpos})
+				searchList.PushBack(Pair{ifm.Value.(string), p.Value.(PosMapRule).wnpos})
 			}
 		}
 	}
