@@ -154,7 +154,6 @@ func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *mo
 
 	body := StringsAppend(document.Title, document.Description, document.Keywords, document.Content)
 
-	println("this", this)
 	if this.tokenizer != nil {
 		this.tokenizer.Tokenize(body, 0, tokens)
 	}
@@ -210,14 +209,22 @@ func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *mo
 		document.AddSentenceEntity(se)
 	}
 
-	for name, frequency := range entities {
-		document.AddUnknownEntity(name, frequency)
-		println(name, frequency)
+	tempEntities := set.New()
+
+	mitieEntities := this.mitie.Process(body)
+	for e := mitieEntities.Front(); e != nil; e = e.Next() {
+		entity := e.Value.(*models.Entity)
+		tempEntities.Add(entity.GetValue())
 	}
 
-	this.PrintTree(document)
-	this.mitie.Process(body)
+	for name, frequency := range entities {
+		name = strings.Replace(name, "_", " ", -1)
+		if !tempEntities.Has(name) {
+			document.AddUnknownEntity(name, frequency)
+		}
+	}
 
+	document.Entities = mitieEntities
 	output <- document
 }
 
