@@ -35,7 +35,7 @@ func (e *Engine) InitNLP() {
 	}
 	Infoln("Init Natural Language Processing Engine")
 	initialized := false
-	count := 90
+	count := 80
 	bar := pb.StartNew(count)
 	bar.ShowPercent = true
 	bar.ShowCounters = false
