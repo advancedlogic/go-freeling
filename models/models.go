@@ -180,15 +180,6 @@ func (this *SentenceEntity) ToJSON() interface{} {
 		}
 		js["tokens"] = tokens
 	}
-
-	if this.wdws.Len() > 0 {
-		wdws := make([]interface{}, 0)
-		for w := this.wdws.Front(); w != nil; w = w.Next() {
-			wdw := w.Value.(*WDWEntity)
-			wdws = append(wdws, wdw.ToJSON())
-		}
-		js["wdws"] = wdws
-	}
 	return js
 }
 
@@ -196,42 +187,10 @@ func (this *SentenceEntity) AddTokenEntity(te *TokenEntity) {
 	this.tokens.PushBack(te)
 }
 
-func (this *SentenceEntity) AddWDWEntity(we *WDWEntity) {
-	this.wdws.PushBack(we)
-}
-
 func (this *SentenceEntity) SetBody(body string)              { this.body = body }
 func (this *SentenceEntity) SetSentence(sentence interface{}) { this.sentence = sentence }
 
 func (this *SentenceEntity) GetSentence() interface{} { return this.sentence }
-
-type WDWEntity struct {
-	who  string
-	did  string
-	what string
-}
-
-func NewWDWEntity(who string, did string, what string) *WDWEntity {
-	return &WDWEntity{
-		who:  who,
-		did:  did,
-		what: what,
-	}
-}
-
-func (this *WDWEntity) ToJSON() interface{} {
-	js := make(map[string]string)
-	if this.who != "" {
-		js["who"] = this.who
-	}
-	if this.did != "" {
-		js["did"] = this.did
-	}
-	if this.what != "" {
-		js["what"] = this.what
-	}
-	return js
-}
 
 type UnknownEntity struct {
 	name      string
