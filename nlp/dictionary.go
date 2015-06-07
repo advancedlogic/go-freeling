@@ -2,10 +2,10 @@ package nlp
 
 import (
 	"container/list"
-	"strings"
-	"strconv"
 	set "gopkg.in/fatih/set.v0"
 	"math"
+	"strconv"
+	"strings"
 	//"os"
 )
 
@@ -17,7 +17,7 @@ const (
 )
 
 const (
-	TAG_DIVIDER = "|"
+	TAG_DIVIDER   = "|"
 	LEMMA_DIVIDER = " "
 )
 
@@ -64,7 +64,7 @@ func NewDictionary(Lang string, dicFile string, sufFile string, compFile string,
 	cfg.AddSection("Entries", DICTIONARY_ENTRIES)
 
 	if !cfg.Open(dicFile) {
-		LOG.Panic("Error opening file "+dicFile)
+		LOG.Panic("Error opening file " + dicFile)
 	}
 
 	this.morfodb = nil
@@ -75,7 +75,8 @@ func NewDictionary(Lang string, dicFile string, sufFile string, compFile string,
 	for cfg.GetContentLine(&line) {
 		items := Split(line, " ")
 		switch cfg.GetSection() {
-			case DICTIONARY_INDEX: {
+		case DICTIONARY_INDEX:
+			{
 				tpe := -1
 				if line == "DB_PREFTREE" {
 					tpe = DB_PREFTREE
@@ -91,16 +92,18 @@ func NewDictionary(Lang string, dicFile string, sufFile string, compFile string,
 				}
 				break
 			}
-			case DICTIONARY_LEMMA_PREF: {
+		case DICTIONARY_LEMMA_PREF:
+			{
 				lem1 := items[0]
 				lem2 := items[1]
 				_, exists := this.lemmaPrefs[lem1]
-				if ! exists {
+				if !exists {
 					this.lemmaPrefs[lem1] = lem2
 				}
 				break
 			}
-			case DICTIONARY_POS_PREF: {
+		case DICTIONARY_POS_PREF:
+			{
 				pos1 := items[0]
 				pos2 := items[1]
 				_, exists := this.posPrefs[pos1]
@@ -109,14 +112,15 @@ func NewDictionary(Lang string, dicFile string, sufFile string, compFile string,
 				}
 				break
 			}
-			case DICTIONARY_ENTRIES: {
+		case DICTIONARY_ENTRIES:
+			{
 				if this.morfodb == nil {
 					LOG.Panic("No IndexType specified in dictionary file " + dicFile)
 				}
 
 				pos := strings.Index(line, " ")
 				key := line[0:pos]
-				data := line[pos + 1:]
+				data := line[pos+1:]
 
 				if key == "" {
 					LOG.Panic("Invalid format. Unexpected blank line in " + dicFile)
@@ -135,7 +139,7 @@ func NewDictionary(Lang string, dicFile string, sufFile string, compFile string,
 				if this.InverseDic {
 					for p := lems.Front(); p != nil; p = p.Next() {
 						for t := p.Value.(Pair).second.(*list.List).Front(); t != nil; t = t.Next() {
-							this.inverdb.addDatabase(p.Value.(Pair).first.(string) + "#" + t.Value.(string), key)
+							this.inverdb.addDatabase(p.Value.(Pair).first.(string)+"#"+t.Value.(string), key)
 						}
 					}
 				}
@@ -155,9 +159,13 @@ func (this *Dictionary) less(s1 string, s2 string, pref map[string]string) bool 
 	var exists bool
 
 	p, exists = pref[s1]
-	if exists && p == s2 { return true}
+	if exists && p == s2 {
+		return true
+	}
 	p, exists = pref[s2]
-	if exists && p == s1 { return false}
+	if exists && p == s1 {
+		return false
+	}
 
 	return s1 < s2
 }
@@ -191,13 +199,13 @@ func (this *Dictionary) ParseDictEntry(data string, lems *list.List) bool {
 	dataItems := Split(data, " ")
 	sl := set.New()
 
-	for i := 0; i < len(dataItems) - 1; i = i + 2{
+	for i := 0; i < len(dataItems)-1; i = i + 2 {
 		lemma := dataItems[i]
 		sl.Add(lemma)
 		if i == len(dataItems) {
 			return false
 		}
-		tag := dataItems[i + 1]
+		tag := dataItems[i+1]
 
 		l := aux[lemma]
 		if l == nil {
@@ -208,7 +216,9 @@ func (this *Dictionary) ParseDictEntry(data string, lems *list.List) bool {
 	}
 
 	ll := list.New()
-	for _, l := range sl.List() { ll.PushBack(l.(string))}
+	for _, l := range sl.List() {
+		ll.PushBack(l.(string))
+	}
 	this.SortList(ll, this.lemmaPrefs)
 
 	for k := ll.Front(); k != nil; k = k.Next() {
@@ -216,7 +226,9 @@ func (this *Dictionary) ParseDictEntry(data string, lems *list.List) bool {
 		l := aux[k.Value.(string)]
 
 		lt := list.New()
-		for _, s := range l.List() { lt.PushBack(s.(string))}
+		for _, s := range l.List() {
+			lt.PushBack(s.(string))
+		}
 		this.SortList(lt, this.posPrefs)
 		lems.PushBack(Pair{k.Value.(string), lt})
 
@@ -252,14 +264,14 @@ func (this *Dictionary) SearchForm(s string, la *list.List) {
 			q = strings.Index(data[p:], LEMMA_DIVIDER)
 			lem := data[p:]
 			if q > -1 {
-				lem = data[p:p+q]
+				lem = data[p : p+q]
 			}
 			LOG.Trace("   got lemma " + lem + " p=" + strconv.Itoa(p) + " q=" + strconv.Itoa(q))
 			p = p + q + 1
 			q = strings.Index(data[p:], LEMMA_DIVIDER)
 			tmpString := data[p:]
 			if q > -1 {
-				tmpString = data[p: p+q]
+				tmpString = data[p : p+q]
 			}
 			tags := Split(tmpString, TAG_DIVIDER)
 			for _, tag := range tags {
@@ -268,7 +280,7 @@ func (this *Dictionary) SearchForm(s string, la *list.List) {
 				la.PushBack(a)
 			}
 
-			p = If(q == -1 , -1, p + q + 1).(int)
+			p = If(q == -1, -1, p+q+1).(int)
 		}
 	}
 }
@@ -287,7 +299,7 @@ func (this *Dictionary) tagCombination(p *list.Element, last *list.Element) *lis
 		for _, tmpItem := range tmpItems {
 			curr.PushBack(tmpItem)
 		}
-		c := this.tagCombination(p.Next(),last)
+		c := this.tagCombination(p.Next(), last)
 		for i := curr.Front(); i != nil; i = i.Next() {
 			for j := c.Front(); j != nil; j = j.Next() {
 				output.PushBack(i.Value.(string) + "+" + j.Value.(string))
@@ -312,8 +324,8 @@ func (this *Dictionary) CheckContracted(form string, lem string, tag string, lw 
 
 		cl := Substr(lem, 0, pl)
 		ct := Split(Substr(tag, 0, pt), "/")
-		lem = Substr(lem, pl + 1, -1)
-		tag = Substr(tag, pt + 1, -1)
+		lem = Substr(lem, pl+1, -1)
+		tag = Substr(tag, pt+1, -1)
 
 		LOG.Trace("Searching contraction component " + cl + "_" + strings.Join(ct, "/"))
 		la = la.Init()
@@ -331,7 +343,6 @@ func (this *Dictionary) CheckContracted(form string, lem string, tag string, lw 
 
 		lw.PushBack(c)
 
-
 		if c.getNAnalysis() == 0 {
 			LOG.Panic("Tag not found for contraction component. Check dictionary entries for '" + form + "' and '" + cl + "'")
 		}
@@ -341,10 +352,10 @@ func (this *Dictionary) CheckContracted(form string, lem string, tag string, lw 
 	}
 
 	if contr {
-		cl := Substr(lem,0,pl)
+		cl := Substr(lem, 0, pl)
 		ct := Split(Substr(tag, 0, pt), "/")
-		lem = Substr(lem, pl + 1, -1)
-		tag = Substr(tag, pt + 1, -1)
+		lem = Substr(lem, pl+1, -1)
+		tag = Substr(tag, pt+1, -1)
 
 		LOG.Trace("Searching contraction component... " + cl + "_" + strings.Join(ct, "/"))
 
@@ -353,7 +364,7 @@ func (this *Dictionary) CheckContracted(form string, lem string, tag string, lw 
 
 		if caps == 2 {
 			cl = strings.ToUpper(cl)
-		} else if (caps == 1 && lw.Len() == 0) {
+		} else if caps == 1 && lw.Len() == 0 {
 			cl = strings.Title(cl)
 		}
 		LOG.Tracef("Found %d analysis", la.Len())
@@ -382,12 +393,12 @@ func (this *Dictionary) AnnotateWord(w *Word, lw *list.List, override bool) bool
 	this.SearchForm(w.getForm(), la)
 	w.setFoundInDict(la.Len() > 0)
 	LOG.Trace("   Found " + strconv.Itoa(la.Len()) + " analysis.")
-	for a:= la.Front(); a != nil; a = a.Next() {
+	for a := la.Front(); a != nil; a = a.Next() {
 		w.addAnalysis(a.Value.(*Analysis))
 		LOG.Trace("   added analysis " + a.Value.(*Analysis).getLemma())
 	}
 
-	if (this.CompoundAnalysis) {
+	if this.CompoundAnalysis {
 		//TODO
 	}
 
@@ -400,8 +411,10 @@ func (this *Dictionary) AnnotateWord(w *Word, lw *list.List, override bool) bool
 		for a := w.Front(); a != nil; a = a.Next() {
 			tgs := list.New()
 			tmpItems := Split(a.Value.(*Analysis).getTag(), "+")
-			for _, tmpItem := range tmpItems { tgs.PushBack(tmpItem) }
-			tc := this.tagCombination(tgs.Front(),tgs.Back().Prev())
+			for _, tmpItem := range tmpItems {
+				tgs.PushBack(tmpItem)
+			}
+			tc := this.tagCombination(tgs.Front(), tgs.Back().Prev())
 
 			if tc.Len() > 1 {
 				newLa = newLa.Init()
@@ -437,7 +450,7 @@ func (this *Dictionary) AnnotateWord(w *Word, lw *list.List, override bool) bool
 			ca = w.Front()
 		}
 		if ca != nil && this.CheckContracted(w.getForm(), ca.Value.(*Analysis).getLemma(), ca.Value.(*Analysis).getTag(), lw) {
-				contr = true
+			contr = true
 		}
 	}
 
@@ -449,7 +462,7 @@ func (this *Dictionary) Analyze(se *Sentence) {
 
 	for pos := se.Front(); pos != nil; pos = pos.Next() {
 		LOG.Tracef("Processing: %s - %d %s", pos.Value.(*Word).getForm(), pos.Value.(*Word).getNAnalysis(), string(pos.Value.(*Word).getTag(0)))
-		if pos.Value.(*Word).getNAnalysis()	== 0 || (pos.Value.(*Word).getNAnalysis() > 0 && string(pos.Value.(*Word).getTag(0)[0]) == "Z") {
+		if pos.Value.(*Word).getNAnalysis() == 0 || (pos.Value.(*Word).getNAnalysis() > 0 && string(pos.Value.(*Word).getTag(0)[0]) == "Z") {
 			LOG.Trace("Annotating word:" + pos.Value.(*Word).getForm())
 
 			lw := list.New()
@@ -461,13 +474,13 @@ func (this *Dictionary) Analyze(se *Sentence) {
 
 				step := (float64(fin) - float64(st) + 1.0) / float64(lw.Len())
 				step = math.Max(1, step)
-				ln := math.Max(1, step - 1.0)
+				ln := math.Max(1, step-1.0)
 
 				var n int
 				var i *list.Element
 				n = 1
 				for i = lw.Front(); i != nil; i = i.Next() {
-					f := If( n == lw.Len(), fin, st + int(ln)).(int)
+					f := If(n == lw.Len(), fin, st+int(ln)).(int)
 					i.Value.(*Word).setSpan(st, f)
 					i.Value.(*Word).user = pos.Value.(*Word).user
 
@@ -492,6 +505,3 @@ func (this *Dictionary) Analyze(se *Sentence) {
 		se.rebuildWordIndex()
 	}
 }
-
-
-

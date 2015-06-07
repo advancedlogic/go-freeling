@@ -1,11 +1,11 @@
 package nlp
 
 import (
-	"strings"
- 	"io/ioutil"
-	"strconv"
-	set "gopkg.in/fatih/set.v0"
 	"container/list"
+	set "gopkg.in/fatih/set.v0"
+	"io/ioutil"
+	"strconv"
+	"strings"
 )
 
 const (
@@ -16,29 +16,29 @@ const (
 )
 
 type Synset struct {
-	scope  int
-	lemma  string
-	wnid   string
+	scope    int
+	lemma    string
+	wnid     string
 	shortTag string
-	pos    float64
-	neg    float64
-	domain string
-	score  int
-	gloss  string
+	pos      float64
+	neg      float64
+	domain   string
+	score    int
+	gloss    string
 }
 
 func NewSynset(scope int, lemma string, wnid string, pos float64, neg float64, domain string, score int, gloss string) *Synset {
-	shortTag := wnid[strings.Index(wnid, "-") + 1:]
+	shortTag := wnid[strings.Index(wnid, "-")+1:]
 	return &Synset{
-		scope :scope,
-		lemma : lemma,
-		wnid : wnid,
-		shortTag : shortTag,
-		pos : pos,
-		neg : neg,
-		domain : domain,
-		score : score,
-		gloss : gloss,
+		scope:    scope,
+		lemma:    lemma,
+		wnid:     wnid,
+		shortTag: shortTag,
+		pos:      pos,
+		neg:      neg,
+		domain:   domain,
+		score:    score,
+		gloss:    gloss,
 	}
 }
 
@@ -49,8 +49,8 @@ type Disambiguator struct {
 
 func NewDisambiguator(disFile string) *Disambiguator {
 	this := Disambiguator{
-		wnids : make(map[string]*Synset),
-		binds : make(map[string]*set.Set),
+		wnids: make(map[string]*Synset),
+		binds: make(map[string]*set.Set),
 	}
 
 	fileString, err := ioutil.ReadFile(disFile)
@@ -59,7 +59,9 @@ func NewDisambiguator(disFile string) *Disambiguator {
 	}
 	lines := strings.Split(string(fileString), "\n")
 	for _, line := range lines {
-		if line == "" { continue }
+		if line == "" {
+			continue
+		}
 		items := Split(line, "\t")
 		sscope := items[0]
 		scope := DOCUMENT_SCOPE
@@ -69,11 +71,12 @@ func NewDisambiguator(disFile string) *Disambiguator {
 			scope = SENTENCE_SCOPE
 		} else if sscope == "sb" {
 			scope = SENTENCE_BIND
-		}  else if sscope == "nd" {
+		} else if sscope == "nd" {
 			scope = ND_SCOPE
 		}
 		switch scope {
-		 	case DOCUMENT_SCOPE, SENTENCE_SCOPE, ND_SCOPE: {
+		case DOCUMENT_SCOPE, SENTENCE_SCOPE, ND_SCOPE:
+			{
 				lemma := items[1]
 				wnid := items[2]
 				pos, _ := strconv.ParseFloat(items[3], 64)
@@ -85,7 +88,8 @@ func NewDisambiguator(disFile string) *Disambiguator {
 				this.wnids[wnid] = syn
 				break
 			}
-			case SENTENCE_BIND: {
+		case SENTENCE_BIND:
+			{
 				key := items[1][1:]
 				for i := 2; i < len(items); i++ {
 					if this.binds[key] == nil {
@@ -99,7 +103,6 @@ func NewDisambiguator(disFile string) *Disambiguator {
 
 	return &this
 }
-
 
 func (this *Disambiguator) Analyze(ss *list.List) {
 	for s := ss.Front(); s != nil; s = s.Next() {

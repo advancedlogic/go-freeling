@@ -49,7 +49,6 @@ func (m Map) Do(f func(key interface{}, value interface{})) {
 	}
 }
 
-
 //---
 // Specialized String() key based SMap:
 //---
@@ -68,7 +67,7 @@ func (m SMap) Insert(key Stringer, value interface{}) {
 	m[key.String()] = MPair{key, value}
 }
 
-func (m SMap) Do(f func(key interface{},value interface{})) {
+func (m SMap) Do(f func(key interface{}, value interface{})) {
 	for _, p := range m {
 		f(p.Key, p.Value)
 	}
@@ -86,7 +85,6 @@ func (m SMap) Delete(key Stringer) {
 func (m SMap) Len() int {
 	return len(m)
 }
-
 
 //---
 // Specialized Int() key based IMap :

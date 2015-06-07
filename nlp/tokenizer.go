@@ -51,7 +51,7 @@ func NewTokenizer(tokenizerFile string) *Tokenizer {
 				mname := items[0]
 				mvalue := items[1]
 				macros.PushBack(Pair{mname, mvalue})
-				LOG.Trace("Read macro "+mname+": "+mvalue)
+				LOG.Trace("Read macro " + mname + ": " + mvalue)
 				break
 			}
 		case TOKENIZER_REGEXPS:
@@ -82,19 +82,19 @@ func NewTokenizer(tokenizerFile string) *Tokenizer {
 					if err == nil {
 						this.rules.PushBack(Pair{comm, x})
 					} else {
-						LOG.Warn("Rule "+comm+" ["+newre+"] failed to be compiled")
+						LOG.Warn("Rule " + comm + " [" + newre + "] failed to be compiled")
 					}
 				} else {
 					x, err := regexp.Compile(re)
 					if err == nil {
 						this.rules.PushBack(Pair{comm, x})
 					} else {
-						LOG.Warn("Rule "+comm+" ["+re+"] failed to be compiled")
+						LOG.Warn("Rule " + comm + " [" + re + "] failed to be compiled")
 					}
 				}
 
 				this.matches[comm] = substr
-				LOG.Trace("Stored rule "+comm+" "+re+" "+strconv.Itoa(substr))
+				LOG.Trace("Stored rule " + comm + " " + re + " " + strconv.Itoa(substr))
 				break
 
 			}
@@ -127,11 +127,11 @@ func (this *Tokenizer) Tokenize(p string, offset int, v *list.List) {
 			cont++
 			offset++
 		}
-		LOG.Trace("Tokenizing ["+p[cont:]+"]")
+		LOG.Trace("Tokenizing [" + p[cont:] + "]")
 		match = false
 
 		for i = this.rules.Front(); i != nil && !match; i = i.Next() {
-			LOG.Trace("Checking rule "+i.Value.(Pair).first.(string))
+			LOG.Trace("Checking rule " + i.Value.(Pair).first.(string))
 			ps := strings.Index(p[cont:], " ")
 			delta := cont + ps
 			if ps == -1 {
@@ -145,7 +145,7 @@ func (this *Tokenizer) Tokenize(p string, offset int, v *list.List) {
 				for j := If(substr == 0, 0, 1).(int); j <= substr && match; j++ {
 					t[j] = results[j]
 					ln += len(t[j])
-					LOG.Trace("Found match "+strconv.Itoa(j)+" ["+t[j]+"] for rule "+i.Value.(Pair).first.(string))
+					LOG.Trace("Found match " + strconv.Itoa(j) + " [" + t[j] + "] for rule " + i.Value.(Pair).first.(string))
 					if string(i.Value.(Pair).first.(string)[0]) == "*" {
 						lower := strings.ToLower(t[j])
 						if !this.abrevs.Has(lower) {
@@ -167,18 +167,18 @@ func (this *Tokenizer) Tokenize(p string, offset int, v *list.List) {
 			substr = this.matches[i.Value.(Pair).first.(string)]
 			for j := If(substr == 0, 0, 1).(int); j <= substr && match; j++ {
 				if len(t[j]) > 0 {
-					LOG.Trace("Accepting matched substring ["+t[j]+"]")
+					LOG.Trace("Accepting matched substring [" + t[j] + "]")
 					w := NewWordFromLemma(t[j])
 					w.setSpan(offset, offset+len(t[j]))
 					offset += len(t[j])
 					v.PushBack(w)
 				} else {
-					LOG.Trace("Skipping matched null substring ["+t[j]+"]")
+					LOG.Trace("Skipping matched null substring [" + t[j] + "]")
 				}
 			}
 			cont += ln
 		} else if cont < len(p) {
-			LOG.Warn("No rule matched input substring"+p[cont:]+" . Character "+string(p[cont:][0])+" skipped . Check your tokenization rules")
+			LOG.Warn("No rule matched input substring" + p[cont:] + " . Character " + string(p[cont:][0]) + " skipped . Check your tokenization rules")
 			cont++
 		}
 	}

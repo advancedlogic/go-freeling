@@ -33,7 +33,7 @@ func NewDatabase(t int) *Database {
 func NewDatabaseFromFile(dbFile string) *Database {
 	this := Database{
 		DBType: DB_MAP,
-		dbmap : make(map[string]string),
+		dbmap:  make(map[string]string),
 	}
 
 	if dbFile != "" {

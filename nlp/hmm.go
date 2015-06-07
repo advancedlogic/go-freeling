@@ -53,7 +53,7 @@ type Trellis struct {
 const TRELLIS_ZERO_logprob = -math.MaxFloat64
 
 func NewTrellis(T int, kb int) *Trellis {
-	TRACE(5, "New trellis T:" + strconv.Itoa(T) + " - kb:" + strconv.Itoa(kb), MOD_HMM)
+	TRACE(5, "New trellis T:"+strconv.Itoa(T)+" - kb:"+strconv.Itoa(kb), MOD_HMM)
 	trl := make([]Map, T)
 	for i, _ := range trl {
 		trl[i] = make(Map)
@@ -66,7 +66,6 @@ func NewTrellis(T int, kb int) *Trellis {
 		EndState:     &Bigram{"ENDSTATE", "ENDSTATE"},
 	}
 }
-
 
 func (this *Trellis) insert(t int, s *Bigram, sa *Bigram, kb int, p float64) {
 	i, ok := this.trl[t].Get(s)
@@ -471,7 +470,7 @@ func (this *HMMTagger) ProbB_log(state_i *Bigram, obs *Word) float64 {
 		plog_word = k
 	}
 
-	TRACE(5, "Probability for word " + obs.getLCForm() + " = " + strconv.FormatFloat(plog_word, 'f', -1, 64), MOD_HMM)
+	TRACE(5, "Probability for word "+obs.getLCForm()+" = "+strconv.FormatFloat(plog_word, 'f', -1, 64), MOD_HMM)
 	k = this.PTag[tag2]
 
 	if k == 0 {
@@ -479,7 +478,7 @@ func (this *HMMTagger) ProbB_log(state_i *Bigram, obs *Word) float64 {
 	}
 
 	plog_st = math.Log(k)
-	TRACE(5, "Probability for tag " + tag2 + "/x = " + strconv.FormatFloat(plog_st, 'f', -1, 64), MOD_HMM)
+	TRACE(5, "Probability for tag "+tag2+"/x = "+strconv.FormatFloat(plog_st, 'f', -1, 64), MOD_HMM)
 	var pa float64 = 0
 	for a := obs.Front(); a != nil; a = a.Next() {
 		if this.Tags.GetShortTag(a.Value.(*Analysis).getTag()) == tag2 {
@@ -488,7 +487,7 @@ func (this *HMMTagger) ProbB_log(state_i *Bigram, obs *Word) float64 {
 	}
 
 	plog_word_tag = math.Log(pa)
-	TRACE(5, "Probability word/state " + obs.getLCForm() + "/" + tag2 + " = " + strconv.FormatFloat(plog_word_tag, 'f', -1, 64), MOD_HMM)
+	TRACE(5, "Probability word/state "+obs.getLCForm()+"/"+tag2+" = "+strconv.FormatFloat(plog_word_tag, 'f', -1, 64), MOD_HMM)
 	pb_log = plog_word_tag + plog_word - plog_st
 
 	TRACE(5, fmt.Sprintf("     plog_word_tag=%f", plog_word_tag), MOD_HMM)
@@ -504,7 +503,7 @@ func (this *HMMTagger) ProbPi_log(state_i *Bigram) float64 {
 	k, ok := this.PInitial.Get(state_i)
 	if ok {
 		ppi_log = k.(float64)
-		TRACE(6,"Initial log_probability for state_i [" + state_i.First + "," + state_i.Second + "] = " + strconv.FormatFloat(ppi_log, 'f', -1, 64), MOD_HMM)
+		TRACE(6, "Initial log_probability for state_i ["+state_i.First+","+state_i.Second+"] = "+strconv.FormatFloat(ppi_log, 'f', -1, 64), MOD_HMM)
 	} else if state_i.First == "0" {
 		ppi_log = this.probInitial
 	} else {

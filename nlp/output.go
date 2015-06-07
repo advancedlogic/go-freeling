@@ -1,6 +1,6 @@
 package nlp
 
-type Output struct {}
+type Output struct{}
 
 func (this Output) outputSense(a *Analysis) string {
 	res := ""
@@ -15,7 +15,7 @@ func (this Output) outputSense(a *Analysis) string {
 }
 
 func (this Output) PrintTree(output *string, n *ParseTreeIterator, depth int) {
-	*output += CreateStringWithChar (depth * 2, " ")
+	*output += CreateStringWithChar(depth*2, " ")
 	if n.pnode.numChildren() == 0 {
 		if n.pnode.info.(*Node).isHead() {
 			*output += "+"
@@ -27,11 +27,13 @@ func (this Output) PrintTree(output *string, n *ParseTreeIterator, depth int) {
 		*output += "(" + w.getForm() + " " + w.getLemma(0) + " " + w.getTag(0) + ")\n"
 		//TODO: outputSense
 	} else {
-		if n.pnode.info.(*Node).isHead() { *output += "+"}
-		*output += n.pnode.info.(*Node).getLabel() + "_[\n"
-		for d:= n.pnode.siblingBegin(); d.pnode != n.pnode.siblingEnd().pnode; d = d.siblingPlusPlus() {
-			this.PrintTree(output, d, depth + 1)
+		if n.pnode.info.(*Node).isHead() {
+			*output += "+"
 		}
-		*output += CreateStringWithChar (depth * 2, " ") + "]\n"
+		*output += n.pnode.info.(*Node).getLabel() + "_[\n"
+		for d := n.pnode.siblingBegin(); d.pnode != n.pnode.siblingEnd().pnode; d = d.siblingPlusPlus() {
+			this.PrintTree(output, d, depth+1)
+		}
+		*output += CreateStringWithChar(depth*2, " ") + "]\n"
 	}
 }

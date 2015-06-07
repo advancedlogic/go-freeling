@@ -84,8 +84,8 @@ func Capitalize(form string, caps int, init bool) string {
 	return cl
 }
 
-func List2Array(l *list.List) []interface {} {
-	output := make([]interface {},0)
+func List2Array(l *list.List) []interface{} {
+	output := make([]interface{}, 0)
 	for i := l.Front(); i != nil; i = i.Next() {
 		output = append(output, i.Value)
 	}
@@ -93,16 +93,16 @@ func List2Array(l *list.List) []interface {} {
 }
 
 func StrList2StrArray(l *list.List) []string {
-	output := make([]string ,0)
+	output := make([]string, 0)
 	for i := l.Front(); i != nil; i = i.Next() {
 		output = append(output, i.Value.(string))
 	}
 	return output
 }
 
-func Array2List(a []interface {}) *list.List {
+func Array2List(a []interface{}) *list.List {
 	output := list.New()
-	for _,i := range a {
+	for _, i := range a {
 		output.PushBack(i)
 	}
 
@@ -111,24 +111,24 @@ func Array2List(a []interface {}) *list.List {
 
 func StrArray2StrList(a []string) *list.List {
 	output := list.New()
-	for _,i := range a {
+	for _, i := range a {
 		output.PushBack(i)
 	}
 
 	return output
 }
 
-func EmptyFunc(i interface {}) {}
+func EmptyFunc(i interface{}) {}
 
 func Substr(s string, b int, l int) string {
- 	ln := len(s)
+	ln := len(s)
 	if b > ln {
 		return ""
 	}
 	if l == -1 || l >= ln {
 		return s[b:]
 	} else {
-		return s[b:b + l]
+		return s[b : b+l]
 	}
 }
 
@@ -164,7 +164,7 @@ func HasLowercase(s string) bool {
 }
 
 func MultiIndex(s string, i string) int {
-	for _,c := range i {
+	for _, c := range i {
 		tmpPos := strings.Index(s, string(c))
 		if tmpPos > -1 {
 			return tmpPos
@@ -189,7 +189,7 @@ func ListSwap(ls1 *list.List, ls2 *list.List) {
 }
 
 func ArrayFloatSwap(a1 []float64, a2 []float64) {
-	copy(a2,a1)
+	copy(a2, a1)
 }
 
 func ArrayFloatInit(l int, def float64) []float64 {
@@ -209,7 +209,7 @@ func StringsAppend(str ...string) string {
 	buffer := make([]byte, l)
 	l = 0
 	for _, s := range str {
-		copy(buffer[l:l + len(s)], []byte(s))
+		copy(buffer[l:l+len(s)], []byte(s))
 		l += len(s)
 	}
 	return string(buffer)
