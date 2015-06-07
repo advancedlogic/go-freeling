@@ -3,6 +3,7 @@ package models
 import (
 	"container/list"
 	"encoding/json"
+	"fmt"
 	"time"
 
 	uuid "github.com/nu7hatch/gouuid"
@@ -21,7 +22,8 @@ type DocumentEntity struct {
 	Language    string   `param:"lang"`
 	Flags       []string `param:flags`
 	sentences   *list.List
-	entities    map[string]int64
+	Unknown     map[string]int64
+	Entities    *list.List
 }
 
 func NewDocumentEntity() *DocumentEntity {
@@ -33,7 +35,7 @@ func (this *DocumentEntity) Init() {
 	this.id = u4.String()
 	this.timestamp = time.Now().UnixNano()
 	this.sentences = list.New()
-	this.entities = make(map[string]int64)
+	this.Unknown = make(map[string]int64)
 	this.Status = ""
 }
 
@@ -90,10 +92,19 @@ func (this *DocumentEntity) ToJSON() interface{} {
 		js["sentences"] = sentences
 	}
 
-	if len(this.entities) > 0 {
-		entities := make([]interface{}, 0)
-		for name, frequency := range this.entities {
+	if len(this.Unknown) > 0 {
+		unknown := make([]interface{}, 0)
+		for name, frequency := range this.Unknown {
 			entity := NewUnknownEntity(name, frequency)
+			unknown = append(unknown, entity.ToJSON())
+		}
+		js["unknown"] = unknown
+	}
+
+	if this.Entities.Len() > 0 {
+		entities := make([]interface{}, 0)
+		for e := this.Entities.Front(); e != nil; e = e.Next() {
+			entity := e.Value.(*Entity)
 			entities = append(entities, entity.ToJSON())
 		}
 		js["entities"] = entities
@@ -106,7 +117,7 @@ func (this *DocumentEntity) Sentences() *list.List                { return this.
 func (this *DocumentEntity) SetSentences(lss *list.List)          { this.sentences = lss }
 func (this *DocumentEntity) AddSentenceEntity(se *SentenceEntity) { this.sentences.PushBack(se) }
 func (this *DocumentEntity) AddUnknownEntity(name string, frequency int64) {
-	this.entities[name] = frequency
+	this.Unknown[name] = frequency
 }
 func (this *DocumentEntity) String() string {
 	return this.Url
@@ -191,6 +202,36 @@ func (this *SentenceEntity) SetBody(body string)              { this.body = body
 func (this *SentenceEntity) SetSentence(sentence interface{}) { this.sentence = sentence }
 
 func (this *SentenceEntity) GetSentence() interface{} { return this.sentence }
+
+type Entity struct {
+	model string
+	prob  float64
+	value string
+}
+
+func NewEntity(model string, prob float64, value string) *Entity {
+	return &Entity{
+		model: model,
+		prob:  prob,
+		value: value,
+	}
+}
+
+func (this *Entity) String() string {
+	return fmt.Sprintf("%s:%0.3f:%s", this.model, this.prob, this.value)
+}
+
+func (this *Entity) ToJSON() interface{} {
+	js := make(map[string]interface{})
+	js["name"] = this.value
+	js["type"] = this.model
+	js["probability"] = this.prob
+	return js
+}
+
+func (this *Entity) GetValue() string {
+	return this.value
+}
 
 type UnknownEntity struct {
 	name      string
