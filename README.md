@@ -19,6 +19,7 @@ This is the list of features already implemented:
 * PoS tagging
 * Chart-based shallow parsing
 * Named entity classification (With an external library MITIE - https://github.com/mit-nlp/MITIE)
+* Rule-based dependency parsing
 
 -
 
@@ -43,7 +44,6 @@ TODO:
 * add comments
 * add tests
 * implement WordNet-based sense annotation and disambiguation
-* implement Rule-based dependency parsing
 
 -
 **Linguistic Data** to run the server can be download here (English only):
