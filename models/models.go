@@ -205,27 +205,27 @@ func (this *SentenceEntity) GetSentence() interface{} { return this.sentence }
 
 type Entity struct {
 	model string
-	prob  float64
+	score float64
 	value string
 }
 
-func NewEntity(model string, prob float64, value string) *Entity {
+func NewEntity(model string, score float64, value string) *Entity {
 	return &Entity{
 		model: model,
-		prob:  prob,
+		score: score,
 		value: value,
 	}
 }
 
 func (this *Entity) String() string {
-	return fmt.Sprintf("%s:%0.3f:%s", this.model, this.prob, this.value)
+	return fmt.Sprintf("%s:%0.3f:%s", this.model, this.score, this.value)
 }
 
 func (this *Entity) ToJSON() interface{} {
 	js := make(map[string]interface{})
 	js["name"] = this.value
 	js["type"] = this.model
-	js["probability"] = this.prob
+	js["score"] = this.score
 	return js
 }
 
