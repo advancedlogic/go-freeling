@@ -66,7 +66,6 @@ type NLPEngine struct {
 	dsb           *UKB
 	disambiguator *Disambiguator
 	filter        *set.Set
-	wdw           *WhoDidWhat
 	mitie         *MITIE
 }
 
@@ -122,24 +121,22 @@ func NewNLPEngine(options *NLPOptions) *NLPEngine {
 		this.options.Status()
 	}
 
-	this.wdw = NewWhoDidWhat()
 	this.mitie = NewMITIE(options.DataPath + "/" + options.Lang + "/mitie/ner_model.dat")
 	this.options.Status()
 	return &this
 }
 
 func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *models.DocumentEntity) {
-	/*
-		defer func() {
-			if r := recover(); r != nil {
-				err, _ := r.(error)
-				if err != nil {
-					output <- nil //err.Error()
-				} else {
-					output <- nil
-				}
+	defer func() {
+		if r := recover(); r != nil {
+			err, _ := r.(error)
+			if err != nil {
+				output <- nil //err.Error()
+			} else {
+				output <- nil
 			}
-		}()*/
+		}
+	}()
 	document.Init()
 	tokens := list.New()
 	url := document.Url
@@ -184,9 +181,6 @@ func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *mo
 		if this.shallowParser != nil {
 			this.shallowParser.Analyze(s)
 		}
-		if this.wdw != nil {
-			this.wdw.Analyze(s)
-		}
 	}
 
 	if this.dsb != nil {
@@ -212,12 +206,6 @@ func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *mo
 		body = strings.Trim(body, " ")
 		se.SetBody(body)
 		se.SetSentence(s)
-
-		for w := this.wdw.WDWs.Front(); w != nil; w = w.Next() {
-			wdw := w.Value.(*WDW)
-			wdwEntity := models.NewWDWEntity(wdw.who, wdw.did, wdw.what)
-			se.AddWDWEntity(wdwEntity)
-		}
 
 		document.AddSentenceEntity(se)
 	}
