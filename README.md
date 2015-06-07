@@ -39,7 +39,6 @@ Response is a self-explaining json
 
 -
 TODO:
-* add NER to json
 * clean code
 * add comments
 * add tests
