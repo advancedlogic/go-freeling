@@ -44,7 +44,7 @@ Entity get_entity(char** tokens,
 
 char * my_strcat(const char * str1, const char * str2)
 {
-   char * ret = malloc(strlen(str1)+strlen(str2));
+   char * ret = malloc(strlen(str1)+strlen(str2)+1);
 
    if(ret!=NULL)
    {
