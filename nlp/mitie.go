@@ -95,8 +95,14 @@ func (this *MITIE) Release() {
 
 func (this *MITIE) Process(body string) *list.List {
 	tokens := C.mitie_tokenize(C.CString(body))
+	if tokens == nil {
+		return nil
+	}
 	defer C.mitie_free(unsafe.Pointer(tokens))
 	dets := C.mitie_extract_entities(this.ner, tokens)
+	if dets == nil {
+		return nil
+	}
 	defer C.mitie_free(unsafe.Pointer(dets))
 	num_dets := C.mitie_ner_get_num_detections(dets)
 	duplicates := set.New()
