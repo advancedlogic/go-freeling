@@ -22,8 +22,8 @@ Entity get_entity(char** tokens,
 
 	unsigned long pos, len;
 
-    pos = mitie_ner_get_detection_position(dets, i);
-    len = mitie_ner_get_detection_length(dets, i);
+	pos = mitie_ner_get_detection_position(dets, i);
+	len = mitie_ner_get_detection_length(dets, i);
 
 	double score = mitie_ner_get_detection_score(dets,i);
 	const char* model = mitie_ner_get_detection_tagstr(dets,i);
@@ -33,25 +33,25 @@ Entity get_entity(char** tokens,
 
 	const char* value = "";
 	while(len > 0)
-    {
-    	value = my_strcat(value, " ");
-    	value = my_strcat(value, tokens[pos++]);
-        len--;
-    }
+	{
+		value = my_strcat(value, " ");
+		value = my_strcat(value, tokens[pos++]);
+		len--;
+	}
 	entity.value = value;
-    return entity;
+	return entity;
 }
 
 char * my_strcat(const char * str1, const char * str2)
 {
-   char * ret = malloc(strlen(str1)+strlen(str2));
+	char * ret = malloc(strlen(str1)+strlen(str2)+1);
 
-   if(ret!=NULL)
-   {
-     sprintf(ret, "%s%s", str1, str2);
-     return ret;
-   }
-   return NULL;
+	if(ret!=NULL)
+	{
+		sprintf(ret, "%s%s", str1, str2);
+		return ret;
+	}
+	return NULL;
 }
 
 void releaseTokens(char** tokens) {
@@ -95,8 +95,14 @@ func (this *MITIE) Release() {
 
 func (this *MITIE) Process(body string) *list.List {
 	tokens := C.mitie_tokenize(C.CString(body))
+	if tokens == nil {
+		return nil
+	}
 	defer C.mitie_free(unsafe.Pointer(tokens))
 	dets := C.mitie_extract_entities(this.ner, tokens)
+	if dets == nil {
+		return nil
+	}
 	defer C.mitie_free(unsafe.Pointer(dets))
 	num_dets := C.mitie_ner_get_num_detections(dets)
 	duplicates := set.New()
