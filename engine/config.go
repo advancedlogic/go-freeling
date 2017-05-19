@@ -8,13 +8,13 @@ import (
 )
 
 type Configuration struct {
-	*toml.TomlTree
+	*toml.Tree
 }
 
 func NewConfiguration(filename string) Configuration {
 	configuration := Configuration{}
 	var err error
-	configuration.TomlTree, err = toml.LoadFile(filename)
+	configuration.Tree, err = toml.LoadFile(filename)
 	if err != nil {
 		panic(err.Error())
 	}
