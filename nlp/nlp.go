@@ -4,11 +4,12 @@ import (
 	"container/list"
 	"os"
 	"strings"
+	"fmt"
 
 	"github.com/kdar/factorlog"
 	set "gopkg.in/fatih/set.v0"
 
-	"github.com/advancedlogic/go-freeling/models"
+	"../models"
 )
 
 var LOG *factorlog.FactorLog
@@ -137,6 +138,11 @@ func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *mo
 			}
 		}
 	}()
+	fmt.Println("Url")
+	fmt.Println(document.Url)
+	fmt.Println("Content")
+	fmt.Println(document.Content)
+
 	document.Init()
 	tokens := list.New()
 	url := document.Url

@@ -7,9 +7,9 @@ import (
 
 	"github.com/gorilla/mux"
 
-	. "github.com/advancedlogic/go-freeling/engine"
-	"github.com/advancedlogic/go-freeling/models"
-	. "github.com/advancedlogic/go-freeling/terminal"
+	. "../engine"
+	"../models"
+	. "../terminal"
 )
 
 type HttpServer struct {
@@ -42,6 +42,7 @@ func (this *HttpServer) URLHandler(w http.ResponseWriter, r *http.Request) {
 
 	ch := make(chan *models.DocumentEntity)
 	defer close(ch)
+
 	go this.context.Engine.NLP.Workflow(document, ch)
 	output := <-ch
 
