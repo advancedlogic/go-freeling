@@ -1,9 +1,9 @@
 package main
 
 import (
-	. "./engine"
 	. "./net"
 	. "./terminal"
+	. "./lib"
 )
 
 var logo = `
@@ -22,11 +22,10 @@ func init() {
 }
 
 func main() {
-	context := NewContext("conf/gofreeling.toml")
-	context.InitNLP()
+	analyzer:= NewAnalyzer()
 
 	println(logo)
 
-	httpServer := NewHttpServer(context)
+	httpServer := NewHttpServer(analyzer)
 	httpServer.Listen()
 }

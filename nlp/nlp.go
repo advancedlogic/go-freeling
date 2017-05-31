@@ -4,7 +4,6 @@ import (
 	"container/list"
 	"os"
 	"strings"
-	"fmt"
 
 	"github.com/kdar/factorlog"
 	set "gopkg.in/fatih/set.v0"
@@ -138,10 +137,6 @@ func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *mo
 			}
 		}
 	}()
-	fmt.Println("Url")
-	fmt.Println(document.Url)
-	fmt.Println("Content")
-	fmt.Println(document.Content)
 
 	document.Init()
 	tokens := list.New()
