@@ -4,7 +4,6 @@ import (
 	. "./net"
 	. "./terminal"
 	. "./lib"
-	. "./engine"
 )
 
 var logo = `
@@ -23,10 +22,7 @@ func init() {
 }
 
 func main() {
-	context := NewContext("conf/gofreeling.toml")
-	context.InitNLP()
-
-	analyzer:= NewAnalyzer(context)
+	analyzer:= NewAnalyzer()
 
 	println(logo)
 
