@@ -35,9 +35,7 @@ To process a page:
 
 HTTP GET: *http://localhost:9999/analyzer?url=COPY HERE AN URL*
 
-
-
-`Usage as API endpoint`
+or **Use as API endpoint:**
 <pre>
 HTTP POST:
 
@@ -48,7 +46,9 @@ http://localhost:9999/analyzer-api
 }
 </pre>
 
-`Usage as package`
+*Response is a self-explaining json*
+
+**Usage as package:**
 
 <pre>
 import lib "./lib/Analyzer"
@@ -58,9 +58,6 @@ analyzer:= NewAnalyzer(context)
 analyzer.AnalyzeText(document) //will return an analyzed document
 
 </pre>
-
-
-Response is a self-explaining json
 
 -
 TODO:
