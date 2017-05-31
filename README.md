@@ -35,6 +35,31 @@ To process a page:
 
 HTTP GET: *http://localhost:9999/analyzer?url=COPY HERE AN URL*
 
+
+
+`Usage as API endpoint`
+<pre>
+HTTP POST:
+
+http://localhost:9999/analyzer-api
+
+{
+    content: 'Text you want to analyze'
+}
+</pre>
+
+`Usage as package`
+
+<pre>
+import lib "./lib/Analyzer"
+
+analyzer:= NewAnalyzer(context)
+
+analyzer.AnalyzeText(document) //will return an analyzed document
+
+</pre>
+
+
 Response is a self-explaining json
 
 -
