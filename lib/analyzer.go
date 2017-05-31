@@ -9,9 +9,7 @@ type Analyzer struct {
 	context *Context
 }
 
-func NewAnalyzer() *Analyzer {
-	context := NewContext("conf/gofreeling.toml")
-	context.InitNLP()
+func NewAnalyzer(context *Context) *Analyzer {
 	instance := new(Analyzer)
 	instance.context = context
 
