@@ -49,13 +49,31 @@ http://localhost:9999/analyzer-api
 *Response is a self-explaining json*
 
 **Usage as package:**
-
+(*example*)
 <pre>
-import lib "./lib/Analyzer"
+package main
 
-analyzer:= NewAnalyzer(context)
+import (
+	. "./lib"
+	. "./models"
+	"fmt"
+	"encoding/json"
+)
 
-analyzer.AnalyzeText(document) //will return an analyzed document
+func main() {
+	document := new(DocumentEntity)
+	analyzer := NewAnalyzer()
+	document.Content = "Hello World"
+	output := analyzer.AnalyzeText(document)
+	
+	js := output.ToJSON()
+	b, err := json.Marshal(js)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(b))
+}
 
 </pre>
 
