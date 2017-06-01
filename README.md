@@ -92,6 +92,6 @@ TODO:
 https://www.dropbox.com/s/fwwvfxp2s7dydet/data.zip
 
 
-**WordNet Database** to add annotation (place it inside `./data` folder)
+**WordNet Database** to add ~~annotation~~ (place it inside `./data` folder)
 
 http://wordnetcode.princeton.edu/3.0/WNdb-3.0.tar.gz

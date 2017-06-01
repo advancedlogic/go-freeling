@@ -10,28 +10,39 @@ type WN struct {
 	wn *WordNet
 }
 
-func getPOS(p string) (pos string) {
+type partOfSpeech struct {
+	short string
+	long  string
+}
+
+func getPOS(p string) (pos *partOfSpeech) {
+
+	pos = new(partOfSpeech)
 
 	switch p {
 
 	case "JJ", "JJR", "JJS":
-		pos = "a" //adjective
+		pos.short = "a" //adjective
+		pos.long = "adjective"
 		break
 
 	case "NNS", "NN", "NNP", "NP00000", "NP", "NP00G00", "NP00O00", "NP00V00", "NP00SP0", "NNPS":
-		pos = "n" //noun
+		pos.short = "n" //noun
+		pos.long = "noun"
 		break
 
 	case "RB", "RBR", "RBS", "WRB":
-		pos = "r" //adverb
+		pos.short = "r" //adverb
+		pos.long = "adverb"
 		break
 
 	case "MD", "VBG", "VB", "VBN", "VBD", "VBP", "VBZ":
-		pos = "v" //verb
+		pos.short = "v" //verb
+		pos.long = "verb"
 		break
 
 	default:
-		pos = ""
+		return nil
 	}
 	return pos
 }
@@ -53,22 +64,22 @@ func NewWordNet() *WN {
 }
 
 func (this *WN) Annotate(word string, pos string) []*Annotation {
-	wnPOS := getPOS(pos)
-
-	if pos == "" {
-		return nil
-	}
-
 	if this.wn == nil {
 		return nil
 	}
 
-	result := this.wn.Search(word)[wnPOS]
+	wnPOS := getPOS(pos)
+
+	if wnPOS == nil {
+		return nil
+	}
+
+	result := this.wn.Search(word)[wnPOS.short]
 
 	annotation := []*Annotation{}
 
 	for _, synset := range result {
-		annotation = append(annotation, &Annotation{synset.Pos, synset.Word, synset.Gloss})
+		annotation = append(annotation, &Annotation{wnPOS.long, synset.Word, synset.Gloss})
 	}
 
 	return annotation
