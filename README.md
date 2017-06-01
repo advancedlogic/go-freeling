@@ -25,9 +25,11 @@ This is the list of features already implemented:
 
 **How to use it**:
 
+<pre>
 go build gofreeling.go
 
 ./gofreeling
+</pre>
 
 (http server listens on default port 9999 - port can be changed in conf/gofreeling.toml file)
 
@@ -88,3 +90,8 @@ TODO:
 **Linguistic Data** to run the server can be download here (English only):
 
 https://www.dropbox.com/s/fwwvfxp2s7dydet/data.zip
+
+
+**WordNet Database** to add annotation (place it inside `./data` folder)
+
+http://wordnetcode.princeton.edu/3.0/WNdb-3.0.tar.gz

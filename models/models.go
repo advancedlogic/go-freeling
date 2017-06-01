@@ -113,9 +113,15 @@ func (this *DocumentEntity) ToJSON() interface{} {
 	return js
 }
 
-func (this *DocumentEntity) Sentences() *list.List                { return this.sentences }
-func (this *DocumentEntity) SetSentences(lss *list.List)          { this.sentences = lss }
-func (this *DocumentEntity) AddSentenceEntity(se *SentenceEntity) { this.sentences.PushBack(se) }
+func (this *DocumentEntity) Sentences() *list.List {
+	return this.sentences
+}
+func (this *DocumentEntity) SetSentences(lss *list.List) {
+	this.sentences = lss
+}
+func (this *DocumentEntity) AddSentenceEntity(se *SentenceEntity) {
+	this.sentences.PushBack(se)
+}
 func (this *DocumentEntity) AddUnknownEntity(name string, frequency int64) {
 	this.Unknown[name] = frequency
 }
@@ -135,31 +141,41 @@ const (
 )
 
 type TokenEntity struct {
-	base   string
-	lemma  string
-	pos    string
-	prob   float64
-	class  int
-	role   int
-	weight float64
-	sense  int
+	base       string
+	lemma      string
+	pos        string
+	prob       float64
+	class      int
+	role       int
+	weight     float64
+	sense      int
+	annotation []*Annotation
 }
 
-func NewTokenEntity(base string, lemma string, pos string, prob float64) *TokenEntity {
+type Annotation struct {
+	Pos   string `json:"pos"`
+	Word  []string `json:"words"`
+	Gloss string `json:"glossary"`
+}
+
+func NewTokenEntity(base string, lemma string, pos string, prob float64, annotation []*Annotation) *TokenEntity {
 	return &TokenEntity{
 		base:  base,
 		lemma: lemma,
 		pos:   pos,
 		prob:  prob,
+		annotation: annotation,
 	}
 }
 
 func (this *TokenEntity) ToJSON() interface{} {
+
 	js := make(map[string]interface{})
 	js["base"] = this.base
 	js["lemma"] = this.lemma
 	js["pos"] = this.pos
 	js["prob"] = this.prob
+	js["annotation"] = this.annotation
 	return js
 }
 
@@ -198,10 +214,16 @@ func (this *SentenceEntity) AddTokenEntity(te *TokenEntity) {
 	this.tokens.PushBack(te)
 }
 
-func (this *SentenceEntity) SetBody(body string)              { this.body = body }
-func (this *SentenceEntity) SetSentence(sentence interface{}) { this.sentence = sentence }
+func (this *SentenceEntity) SetBody(body string) {
+	this.body = body
+}
+func (this *SentenceEntity) SetSentence(sentence interface{}) {
+	this.sentence = sentence
+}
 
-func (this *SentenceEntity) GetSentence() interface{} { return this.sentence }
+func (this *SentenceEntity) GetSentence() interface{} {
+	return this.sentence
+}
 
 type Entity struct {
 	model string
