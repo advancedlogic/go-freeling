@@ -70,8 +70,8 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/abiosoft/semaphore"
 	"../models"
+	"github.com/abiosoft/semaphore"
 	set "gopkg.in/fatih/set.v0"
 )
 

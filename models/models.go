@@ -153,17 +153,17 @@ type TokenEntity struct {
 }
 
 type Annotation struct {
-	Pos   string `json:"pos"`
+	Pos   string   `json:"pos"`
 	Word  []string `json:"words"`
-	Gloss string `json:"glossary"`
+	Gloss string   `json:"glossary"`
 }
 
 func NewTokenEntity(base string, lemma string, pos string, prob float64, annotation []*Annotation) *TokenEntity {
 	return &TokenEntity{
-		base:  base,
-		lemma: lemma,
-		pos:   pos,
-		prob:  prob,
+		base:       base,
+		lemma:      lemma,
+		pos:        pos,
+		prob:       prob,
 		annotation: annotation,
 	}
 }

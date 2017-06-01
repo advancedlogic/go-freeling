@@ -7,9 +7,9 @@ import (
 
 	"github.com/gorilla/mux"
 
+	. "../lib"
 	"../models"
 	. "../terminal"
-	. "../lib"
 )
 
 type reqBody struct {
@@ -17,7 +17,7 @@ type reqBody struct {
 }
 
 type HttpServer struct {
-	router  *mux.Router
+	router   *mux.Router
 	analyzer *Analyzer
 }
 
@@ -65,7 +65,7 @@ func (this *HttpServer) URLHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func (this *HttpServer) DocumentHandler(document *models.DocumentEntity, w http.ResponseWriter) {
-	output := this.analyzer.AnalyzeText(document);
+	output := this.analyzer.AnalyzeText(document)
 
 	js := output.ToJSON()
 	b, err := json.Marshal(js)

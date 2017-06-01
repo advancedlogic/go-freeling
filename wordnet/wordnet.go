@@ -1,9 +1,9 @@
 package wordnet
 
 import (
-	. "github.com/fluhus/gostuff/nlp/wordnet"
-	. "../terminal"
 	. "../models"
+	. "../terminal"
+	. "github.com/fluhus/gostuff/nlp/wordnet"
 )
 
 type WN struct {
@@ -12,10 +12,9 @@ type WN struct {
 
 func getPOS(p string) (pos string) {
 
-
 	switch p {
 
-	case "JJ", "JJR",  "JJS":
+	case "JJ", "JJR", "JJS":
 		pos = "a" //adjective
 		break
 
@@ -23,7 +22,7 @@ func getPOS(p string) (pos string) {
 		pos = "n" //noun
 		break
 
-	case "RB",  "RBR",  "RBS", "WRB":
+	case "RB", "RBR", "RBS", "WRB":
 		pos = "r" //adverb
 		break
 
@@ -42,8 +41,7 @@ func NewWordNet() *WN {
 
 	instance := new(WN)
 
-
-	if (err != nil) {
+	if err != nil {
 		Errorln(err.Error())
 		Outputln("There was an error during parsing WordNet database")
 	} else {
@@ -57,11 +55,11 @@ func NewWordNet() *WN {
 func (this *WN) Annotate(word string, pos string) []*Annotation {
 	wnPOS := getPOS(pos)
 
-	if (pos == "") {
+	if pos == "" {
 		return nil
 	}
 
-	if (this.wn == nil) {
+	if this.wn == nil {
 		return nil
 	}
 
