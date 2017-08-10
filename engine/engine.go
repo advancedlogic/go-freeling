@@ -7,8 +7,9 @@ import (
 
 	"github.com/cheggaaa/pb"
 
-	"github.com/advancedlogic/go-freeling/nlp"
-	. "github.com/advancedlogic/go-freeling/terminal"
+	"../nlp"
+	. "../terminal"
+	"../wordnet"
 )
 
 type Engine struct {
@@ -68,6 +69,10 @@ func (e *Engine) InitNLP() {
 	delta := (stop - start) / (1000 * 1000)
 	initialized = true
 	bar.FinishPrint(fmt.Sprintf("Data loaded in %dms", delta))
+
+	wn := wordnet.NewWordNet()
+	nlpEngine.WordNet = wn
+
 	e.NLP = nlpEngine
 	e.Ready = initialized
 }

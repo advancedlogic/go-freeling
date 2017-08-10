@@ -8,7 +8,8 @@ import (
 	"github.com/kdar/factorlog"
 	set "gopkg.in/fatih/set.v0"
 
-	"github.com/advancedlogic/go-freeling/models"
+	"../models"
+	"../wordnet"
 )
 
 var LOG *factorlog.FactorLog
@@ -67,6 +68,7 @@ type NLPEngine struct {
 	disambiguator *Disambiguator
 	filter        *set.Set
 	mitie         *MITIE
+	WordNet       *wordnet.WN
 }
 
 func NewNLPEngine(options *NLPOptions) *NLPEngine {
@@ -137,6 +139,7 @@ func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *mo
 			}
 		}
 	}()
+
 	document.Init()
 	tokens := list.New()
 	url := document.Url
@@ -195,11 +198,18 @@ func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *mo
 		for ww := s.Front(); ww != nil; ww = ww.Next() {
 			w := ww.Value.(*Word)
 			a := w.Front().Value.(*Analysis)
-			te := models.NewTokenEntity(w.getForm(), a.getLemma(), a.getTag(), a.getProb())
-			if a.getTag() == TAG_NP {
-				entities[w.getForm()]++
+
+			base := w.getForm()
+			lemma := a.getLemma()
+			pos := a.getTag()
+			props := a.getProb()
+			annotation := this.WordNet.Annotate(base, pos)
+
+			te := models.NewTokenEntity(base, lemma, pos, props, annotation)
+			if pos == TAG_NP {
+				entities[base]++
 			}
-			body += w.getForm() + " "
+			body += base + " "
 			se.AddTokenEntity(te)
 		}
 		body = strings.Trim(body, " ")
