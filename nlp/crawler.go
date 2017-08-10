@@ -25,7 +25,7 @@ func NewDefaultCrawler() *Crawler {
 func (this *Crawler) Analyze(url string) *goose.Article {
 	g := goose.New()
 	article, err := g.ExtractFromURL(url)
-	if ( err != nil ) {
+	if err != nil {
 		// TODO Probably want to handle this error...
 		panic(err)
 	}

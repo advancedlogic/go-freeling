@@ -7,31 +7,52 @@ import (
 
 	"github.com/gorilla/mux"
 
-	. "github.com/advancedlogic/go-freeling/engine"
-	"github.com/advancedlogic/go-freeling/models"
-	. "github.com/advancedlogic/go-freeling/terminal"
+	. "../lib"
+	"../models"
+	. "../terminal"
 )
 
-type HttpServer struct {
-	router  *mux.Router
-	context *Context
+type reqBody struct {
+	Content string
 }
 
-func NewHttpServer(context *Context) *HttpServer {
+type HttpServer struct {
+	router   *mux.Router
+	analyzer *Analyzer
+}
+
+func NewHttpServer(analyzer *Analyzer) *HttpServer {
 	instance := new(HttpServer)
 	instance.router = mux.NewRouter()
-	instance.context = context
+	instance.analyzer = analyzer
 
 	return instance
 }
 
 func (this *HttpServer) Listen() {
 	this.router.HandleFunc("/analyzer", this.URLHandler)
+	this.router.HandleFunc("/analyzer-api", this.APIHandler)
 	this.router.HandleFunc("/ping", this.PingHandler)
 
-	port := this.context.Int64("http.port", 9999)
+	port := this.analyzer.Int64("http.port", 9999)
 	Infof("Http Server listening on port %d\n", port)
 	http.ListenAndServe(fmt.Sprintf(":%d", port), this.router)
+}
+
+func (this *HttpServer) APIHandler(w http.ResponseWriter, r *http.Request) {
+
+	decoder := json.NewDecoder(r.Body)
+	var body reqBody
+	err := decoder.Decode(&body)
+	if err != nil {
+		panic(err)
+	}
+	defer r.Body.Close()
+
+	document := new(models.DocumentEntity)
+	document.Content = body.Content
+
+	this.DocumentHandler(document, w)
 }
 
 func (this *HttpServer) URLHandler(w http.ResponseWriter, r *http.Request) {
@@ -40,10 +61,11 @@ func (this *HttpServer) URLHandler(w http.ResponseWriter, r *http.Request) {
 	document := new(models.DocumentEntity)
 	document.Url = url
 
-	ch := make(chan *models.DocumentEntity)
-	defer close(ch)
-	go this.context.Engine.NLP.Workflow(document, ch)
-	output := <-ch
+	this.DocumentHandler(document, w)
+}
+
+func (this *HttpServer) DocumentHandler(document *models.DocumentEntity, w http.ResponseWriter) {
+	output := this.analyzer.AnalyzeText(document)
 
 	js := output.ToJSON()
 	b, err := json.Marshal(js)
