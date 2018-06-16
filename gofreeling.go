@@ -1,9 +1,9 @@
 package main
 
 import (
+	. "./lib"
 	. "./net"
 	. "./terminal"
-	. "./lib"
 )
 
 var logo = `
@@ -22,7 +22,7 @@ func init() {
 }
 
 func main() {
-	analyzer:= NewAnalyzer()
+	analyzer := NewAnalyzer()
 
 	println(logo)
 
