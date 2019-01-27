@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -41,8 +41,8 @@ type LocutionStatus struct {
 
 func NewLocutionStatus() *LocutionStatus {
 	return &LocutionStatus{
-		accMW:      set.New(),
-		longestMW:  set.New(),
+		accMW:      set.New(set.ThreadSafe).(*set.Set),
+		longestMW:  set.New(set.ThreadSafe).(*set.Set),
 		mwAnalysis: list.New(),
 		components: make([]*Word, 0),
 	}
@@ -59,7 +59,7 @@ type Locutions struct {
 func NewLocutions(locFile string) *Locutions {
 	this := Locutions{
 		locut:    make(map[string]string),
-		prefixes: set.New(),
+		prefixes: set.New(set.ThreadSafe).(*set.Set),
 	}
 
 	/*
@@ -108,7 +108,7 @@ func NewLocutions(locFile string) *Locutions {
 	this.initialState = LOCUTIONS_ST_P
 	this.stopState = LOCUTIONS_ST_STOP
 	if this.final == nil {
-		this.final = set.New()
+		this.final = set.New(set.ThreadSafe).(*set.Set)
 	}
 	this.final.Add(LOCUTIONS_ST_M)
 	var s, t int
@@ -251,7 +251,7 @@ func (this *Locutions) ComputeToken(state int, j *list.Element, se *Sentence) in
 
 	token := LOCUTIONS_TK_other
 
-	acc := set.New()
+	acc := set.New(set.ThreadSafe).(*set.Set)
 	mw := false
 	pref := false
 

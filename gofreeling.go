@@ -1,9 +1,9 @@
 package main
 
 import (
-	. "./net"
-	. "./terminal"
-	. "./lib"
+	. "github.com/advancedlogic/go-freeling/lib"
+	. "github.com/advancedlogic/go-freeling/net"
+	. "github.com/advancedlogic/go-freeling/terminal"
 )
 
 var logo = `
@@ -22,7 +22,7 @@ func init() {
 }
 
 func main() {
-	analyzer:= NewAnalyzer()
+	analyzer := NewAnalyzer()
 
 	println(logo)
 

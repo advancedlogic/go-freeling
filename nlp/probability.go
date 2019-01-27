@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"strconv"
 	"strings"
 )
@@ -365,7 +365,7 @@ func (this *Probability) guesser(w *Word, mass float64) float64 {
 
 	TRACE(2, "Initial sum="+strconv.FormatFloat(sum, 'f', 3, 64), MOD_PROBABILITY)
 
-	stags := set.New()
+	stags := set.New(set.ThreadSafe).(*set.Set)
 	for li := w.Front(); li != nil; li = li.Next() {
 		stags.Add(this.Tags.GetShortTag(li.Value.(*Analysis).getTag()))
 	}

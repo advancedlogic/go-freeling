@@ -1,8 +1,8 @@
 package lib
 
 import (
-	. "../engine"
-	"../models"
+	. "github.com/advancedlogic/go-freeling/engine"
+	"github.com/advancedlogic/go-freeling/models"
 )
 
 type Analyzer struct {

@@ -3,7 +3,7 @@ package nlp
 import (
 	"container/list"
 	"fmt"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"strconv"
 	"strings"
 )
@@ -56,7 +56,9 @@ func NewTagset(ftagset string) *TagSet {
 					msd = items[2]
 				}
 				this.direct[tag] = &Pair{shtag, msd}
-				this.directInv[set.New(msd, this.MSD_SEP)] = tag
+				s := set.New(set.ThreadSafe).(*set.Set)
+				s.Add(msd, this.MSD_SEP)
+				this.directInv[s] = tag
 				break
 			}
 		case DECOMPOSITION_RULES:

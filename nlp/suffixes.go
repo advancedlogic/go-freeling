@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -77,7 +77,7 @@ func NewAffixes(sufFile string) *Affixes {
 				}
 
 				if this.affix[kind][key] == nil {
-					this.affix[kind][key] = set.New()
+					this.affix[kind][key] = set.New(set.ThreadSafe).(*set.Set)
 				}
 
 				this.affix[kind][key].Add(suf)
@@ -86,13 +86,13 @@ func NewAffixes(sufFile string) *Affixes {
 						this.affixAlways[kind] = make(map[string]*set.Set)
 					}
 					if this.affixAlways[kind][key] == nil {
-						this.affixAlways[kind][key] = set.New()
+						this.affixAlways[kind][key] = set.New(set.ThreadSafe).(*set.Set)
 					}
 					this.affixAlways[kind][key].Add(suf)
 				}
 
 				if this.ExistingLength[kind] == nil {
-					this.ExistingLength[kind] = set.New()
+					this.ExistingLength[kind] = set.New(set.ThreadSafe).(*set.Set)
 				}
 
 				this.ExistingLength[kind].Add(len(key))
@@ -225,7 +225,7 @@ func (this *Affixes) lookForCombinedAffixes(suff map[string]*set.Set, pref map[s
 				sufit := lrulesS[s].(*sufrule)
 				for p := 0; p < rulesP.Size(); p++ {
 					prefit := lrulesP[p].(*sufrule)
-					candidates = set.New()
+					candidates = set.New(set.ThreadSafe).(*set.Set)
 					cand1 = this.GenerateRoots(SUF, sufit, formRoot)
 					this.accen.FixAccentutation(cand1, sufit)
 					lcand1 := cand1.List()
@@ -241,7 +241,7 @@ func (this *Affixes) lookForCombinedAffixes(suff map[string]*set.Set, pref map[s
 }
 
 func (this *Affixes) GenerateRoots(kind int, suf *sufrule, rt string) *set.Set {
-	cand := set.New()
+	cand := set.New(set.ThreadSafe).(*set.Set)
 	var term, r string
 	var pe int
 

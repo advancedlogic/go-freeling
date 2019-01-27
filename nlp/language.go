@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 )
 
 type ProcessorStatus struct {
@@ -33,11 +33,13 @@ func NewAnalysis(lemma string, tag string) *Analysis {
 		distance:      -1.0,
 		senses:        list.New(),
 		retok:         list.New(),
-		selectedKBest: set.New(),
+		selectedKBest: set.New(set.ThreadSafe).(*set.Set),
 	}
 }
 
 func NewAnalysisFromAnalysis(a *Analysis) *Analysis {
+	selectedKBest := set.New(set.ThreadSafe).(*set.Set)
+	selectedKBest.Add(a.selectedKBest.List()...)
 	this := Analysis{
 		lemma:         a.lemma,
 		tag:           a.tag,
@@ -45,7 +47,7 @@ func NewAnalysisFromAnalysis(a *Analysis) *Analysis {
 		distance:      a.distance,
 		senses:        list.New(),
 		retok:         list.New(),
-		selectedKBest: set.New(a.selectedKBest),
+		selectedKBest: selectedKBest,
 	}
 
 	for s := a.senses.Front(); s != nil; s = s.Next() {

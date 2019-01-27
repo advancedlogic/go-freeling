@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"math"
 	"strconv"
 	"strings"
@@ -197,7 +197,7 @@ func (this *Dictionary) SortList(ls *list.List, pref map[string]string) {
 func (this *Dictionary) ParseDictEntry(data string, lems *list.List) bool {
 	aux := make(map[string]*set.Set)
 	dataItems := Split(data, " ")
-	sl := set.New()
+	sl := set.New(set.ThreadSafe).(*set.Set)
 
 	for i := 0; i < len(dataItems)-1; i = i + 2 {
 		lemma := dataItems[i]
@@ -209,7 +209,7 @@ func (this *Dictionary) ParseDictEntry(data string, lems *list.List) bool {
 
 		l := aux[lemma]
 		if l == nil {
-			l = set.New()
+			l = set.New(set.ThreadSafe).(*set.Set)
 			aux[lemma] = l
 		}
 		l.Add(tag)

@@ -1,6 +1,6 @@
 package nlp
 
-import set "gopkg.in/fatih/set.v0"
+import "github.com/fatih/set"
 
 type Accent struct {
 	who AccentsModule

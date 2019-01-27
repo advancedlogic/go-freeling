@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"io/ioutil"
 	"strconv"
 	"strings"
@@ -93,7 +93,7 @@ func NewDisambiguator(disFile string) *Disambiguator {
 				key := items[1][1:]
 				for i := 2; i < len(items); i++ {
 					if this.binds[key] == nil {
-						this.binds[key] = set.New()
+						this.binds[key] = set.New(set.ThreadSafe).(*set.Set)
 					}
 					this.binds[key].Add(items[i][1:])
 				}

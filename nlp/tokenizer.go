@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"regexp"
 	"strconv"
 	"strings"
@@ -22,7 +22,7 @@ type Tokenizer struct {
 
 func NewTokenizer(tokenizerFile string) *Tokenizer {
 	this := Tokenizer{
-		abrevs:  set.New(),
+		abrevs:  set.New(set.ThreadSafe).(*set.Set),
 		rules:   list.New(),
 		matches: make(map[string]int),
 	}

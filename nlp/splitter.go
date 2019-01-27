@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"strconv"
 	"strings"
 )
@@ -27,7 +27,7 @@ type Splitter struct {
 
 func NewSplitter(splitterFile string) *Splitter {
 	this := Splitter{
-		starters: set.New(),
+		starters: set.New(set.ThreadSafe).(*set.Set),
 		enders:   make(map[string]bool),
 		markers:  make(map[string]int),
 	}

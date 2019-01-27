@@ -70,9 +70,9 @@ import (
 	"fmt"
 	"unsafe"
 
-	"../models"
 	"github.com/abiosoft/semaphore"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/advancedlogic/go-freeling/models"
+	"github.com/fatih/set"
 )
 
 type MITIE struct {
@@ -105,7 +105,7 @@ func (this *MITIE) Process(body string) *list.List {
 	}
 	defer C.mitie_free(unsafe.Pointer(dets))
 	num_dets := C.mitie_ner_get_num_detections(dets)
-	duplicates := set.New()
+	duplicates := set.New(set.ThreadSafe).(*set.Set)
 	entites := list.New()
 	for i := 0; i < int(num_dets); i++ {
 		centity := C.get_entity(tokens, dets, C.ulong(i))

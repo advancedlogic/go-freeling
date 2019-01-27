@@ -82,5 +82,6 @@ func (self *Configuration) IntArray(key string, def []int) []int {
 }
 
 func (self *Configuration) GetRandomUUID() string {
-	return uuid.NewV4().String()
+	u, _ := uuid.NewV4()
+	return u.String()
 }

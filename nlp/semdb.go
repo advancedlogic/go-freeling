@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"io/ioutil"
 	"strings"
 )
@@ -82,7 +82,7 @@ func NewSemanticDB(wsdFile string) *SemanticDB {
 
 	path := wsdFile[0:strings.LastIndex(wsdFile, "/")]
 
-	posset := set.New()
+	posset := set.New(set.ThreadSafe).(*set.Set)
 	cfg := NewConfigFile(true, "")
 	cfg.AddSection("WNposMap", SEMDB_WN_POS_MAP)
 	cfg.AddSection("DataFiles", SEMDB_DATA_FILES)

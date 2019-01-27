@@ -5,11 +5,11 @@ import (
 	"os"
 	"strings"
 
+	"github.com/fatih/set"
 	"github.com/kdar/factorlog"
-	set "gopkg.in/fatih/set.v0"
 
-	"../models"
-	"../wordnet"
+	"github.com/advancedlogic/go-freeling/models"
+	"github.com/advancedlogic/go-freeling/wordnet"
 )
 
 var LOG *factorlog.FactorLog
@@ -219,7 +219,7 @@ func (this *NLPEngine) Workflow(document *models.DocumentEntity, output chan *mo
 		document.AddSentenceEntity(se)
 	}
 
-	tempEntities := set.New()
+	tempEntities := set.New(set.ThreadSafe).(*set.Set)
 
 	mitieEntities := this.mitie.Process(body)
 	for e := mitieEntities.Front(); e != nil; e = e.Next() {

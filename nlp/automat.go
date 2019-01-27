@@ -1,7 +1,7 @@
 package nlp
 
 import (
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 )
 
 const AUTOMAT_MAX_STATES = 100

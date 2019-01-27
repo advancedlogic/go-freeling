@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"regexp"
 	"strconv"
 	"strings"
@@ -250,19 +250,19 @@ type NP struct {
 
 func NewNP(npFile string) *NP {
 	this := NP{
-		fun:            set.New(),
-		punct:          set.New(),
-		names:          set.New(),
+		fun:            set.New(set.ThreadSafe).(*set.Set),
+		punct:          set.New(set.ThreadSafe).(*set.Set),
+		names:          set.New(set.ThreadSafe).(*set.Set),
 		ignoreTags:     make(map[string]int),
 		ignoreWords:    make(map[string]int),
-		prefixes:       set.New(),
-		suffixes:       set.New(),
+		prefixes:       set.New(set.ThreadSafe).(*set.Set),
+		suffixes:       set.New(set.ThreadSafe).(*set.Set),
 		RENounAdj:      regexp.MustCompile(NP_RE_NA),
 		REClosed:       regexp.MustCompile(NP_RE_CLO),
 		REDateNumPunct: regexp.MustCompile(NP_RE_DNP),
 	}
 	this.NERModule = NewNERModule(npFile)
-	this.final = set.New()
+	this.final = set.New(set.ThreadSafe).(*set.Set)
 
 	cfg := NewConfigFile(false, "##")
 	cfg.AddSection("Type", NP_NER_TYPE)

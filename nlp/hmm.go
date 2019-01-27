@@ -3,8 +3,8 @@ package nlp
 import (
 	"container/list"
 	"fmt"
+	"github.com/fatih/set"
 	"github.com/petar/GoLLRB/llrb"
-	set "gopkg.in/fatih/set.v0"
 	"math"
 	"strconv"
 	"strings"
@@ -655,7 +655,7 @@ type emission_states struct {
 }
 
 func (this *HMMTagger) FindStates(sent *Sentence) *list.List {
-	st := set.New()
+	st := set.New(set.ThreadSafe).(*set.Set)
 	ls := list.New()
 	w2 := sent.Front()
 	TRACE(3, "obtaining the states that may have emmited the initial word: "+w2.Value.(*Word).getForm(), MOD_HMM)
@@ -666,7 +666,7 @@ func (this *HMMTagger) FindStates(sent *Sentence) *list.List {
 
 	for w1, w2 := w2, w2.Next(); w1 != nil && w2 != nil; w1, w2 = w2, w2.Next() {
 		TRACE(3, "obtaining the states that may have emmited the word: "+w2.Value.(*Word).getForm(), MOD_HMM)
-		st := set.New()
+		st := set.New(set.ThreadSafe).(*set.Set)
 		for a1 := w1.Value.(*Word).selectedBegin(0).Element; a1 != nil; a1 = a1.Next() {
 			for a2 := w2.Value.(*Word).selectedBegin(0).Element; a2 != nil; a2 = a2.Next() {
 				st.Add(&Bigram{this.Tags.GetShortTag(a1.Value.(*Analysis).getTag()), this.Tags.GetShortTag(a2.Value.(*Analysis).getTag())})

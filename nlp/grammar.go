@@ -2,7 +2,7 @@ package nlp
 
 import (
 	"container/list"
-	set "gopkg.in/fatih/set.v0"
+	"github.com/fatih/set"
 	"io/ioutil"
 	"regexp"
 	"strconv"
@@ -96,14 +96,14 @@ type Grammar struct {
 func NewGrammar(fname string) *Grammar {
 	this := Grammar{
 		RulesMap:    make(RulesMap),
-		nonterminal: set.New(),
+		nonterminal: set.New(set.ThreadSafe).(*set.Set),
 		wild:        make(RulesMap),
 		filemap:     make(RulesMap),
 		prior:       make(map[string]int),
-		hidden:      set.New(),
-		flat:        set.New(),
-		notop:       set.New(),
-		onlytop:     set.New(),
+		hidden:      set.New(set.ThreadSafe).(*set.Set),
+		flat:        set.New(set.ThreadSafe).(*set.Set),
+		notop:       set.New(set.ThreadSafe).(*set.Set),
+		onlytop:     set.New(set.ThreadSafe).(*set.Set),
 	}
 
 	MAX := 32
