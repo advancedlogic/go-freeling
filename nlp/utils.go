@@ -30,7 +30,7 @@ func If(cond bool, trueRes interface{}, falseRes interface{}) interface{} {
 }
 
 func WhiteSpace(c uint8) bool {
-	if c == 0x20 || c == 0xc || c == 0x0a || c == 0x0d || c == 0x09 || c == 0x0b {
+	if c == 0x20 || c == 0xc || c == 0x0a || c == 0x0d || c == 0x09 || c == 0x0b || c == 0xc2 {
 		return true
 	}
 
