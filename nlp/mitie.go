@@ -71,7 +71,7 @@ import (
 	"unsafe"
 
 	"github.com/abiosoft/semaphore"
-	"github.com/advancedlogic/go-freeling/models"
+	"github.com/drankou/go-freeling/models"
 	"github.com/fatih/set"
 )
 
