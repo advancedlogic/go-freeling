@@ -7,9 +7,9 @@ import (
 
 	"github.com/gorilla/mux"
 
-	. "github.com/drankou/go-freeling/lib"
-	"github.com/drankou/go-freeling/models"
-	. "github.com/drankou/go-freeling/terminal"
+	. "github.com/advancedlogic/go-freeling/lib"
+	"github.com/advancedlogic/go-freeling/models"
+	. "github.com/advancedlogic/go-freeling/terminal"
 )
 
 type reqBody struct {

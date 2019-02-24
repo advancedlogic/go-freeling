@@ -1,8 +1,8 @@
 package wordnet
 
 import (
-	. "github.com/drankou/go-freeling/models"
-	. "github.com/drankou/go-freeling/terminal"
+	. "github.com/advancedlogic/go-freeling/models"
+	. "github.com/advancedlogic/go-freeling/terminal"
 	. "github.com/fluhus/gostuff/nlp/wordnet"
 )
 

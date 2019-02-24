@@ -8,8 +8,8 @@ import (
 	"github.com/fatih/set"
 	"github.com/kdar/factorlog"
 
-	"github.com/drankou/go-freeling/models"
-	"github.com/drankou/go-freeling/wordnet"
+	"github.com/advancedlogic/go-freeling/models"
+	"github.com/advancedlogic/go-freeling/wordnet"
 )
 
 var LOG *factorlog.FactorLog
