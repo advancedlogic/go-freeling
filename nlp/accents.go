@@ -6,7 +6,7 @@ type Accent struct {
 	who AccentsModule
 }
 
-//Create the appropriate accents module (according to received options), and create a wrapper to access it.
+// Create the appropriate accents module (according to received options), and create a wrapper to access it.
 func NewAccent(lang string) *Accent {
 	this := Accent{}
 	if lang == "es" {
@@ -21,7 +21,7 @@ func NewAccent(lang string) *Accent {
 	return &this
 }
 
-//Wrapper methods: just call the wrapped accents module.
+// Wrapper methods: just call the wrapped accents module.
 func (this *Accent) FixAccentutation(candidates *set.Set, suf *sufrule) {
 	this.who.FixAccentuation(candidates, suf)
 }

@@ -12,59 +12,59 @@ func NewList() *List {
 }
 
 /*
-func (this *List) push(c rune, wordEnd bool) interface {} {
-	n := this.find(c)
-	if n == nil {
-		if !wordEnd {
-			n = NewListRecBase(c)
-		} else {
-			n = NewListRecBase(c)
-		}
+	func (this *List) push(c rune, wordEnd bool) interface {} {
+		n := this.find(c)
+		if n == nil {
+			if !wordEnd {
+				n = NewListRecBase(c)
+			} else {
+				n = NewListRecBase(c)
+			}
 
-		if this.end != nil {
-			this.end.next = n
-		} else {
-			this.begin = n
-		}
-		this.end = n
-	} else if wordEnd {
-		tmp := this.begin
-		var prev *ListRecBase = nil
-		for tmp != n {
-			prev = tmp
-			tmp = tmp.next
-		}
-
-		if n == this.end {
-			this.end = nil
-		}
-
-		ntmp := n.next
-		l := n.nextList
-		n = NewListRecData(c)
-		n.next = ntmp
-		n.nextList = l
-
-		if prev != nil {
-			prev.next = n
-		} else {
-			this.begin = n
-		}
-
-		if this.end == nil {
+			if this.end != nil {
+				this.end.next = n
+			} else {
+				this.begin = n
+			}
 			this.end = n
-		}
-	}
+		} else if wordEnd {
+			tmp := this.begin
+			var prev *ListRecBase = nil
+			for tmp != n {
+				prev = tmp
+				tmp = tmp.next
+			}
 
-	if !wordEnd {
-		if n.nextList == nil {
-			n.nextList = NewList()
+			if n == this.end {
+				this.end = nil
+			}
+
+			ntmp := n.next
+			l := n.nextList
+			n = NewListRecData(c)
+			n.next = ntmp
+			n.nextList = l
+
+			if prev != nil {
+				prev.next = n
+			} else {
+				this.begin = n
+			}
+
+			if this.end == nil {
+				this.end = n
+			}
 		}
-		return n.nextList
-	} else {
-		return n
+
+		if !wordEnd {
+			if n.nextList == nil {
+				n.nextList = NewList()
+			}
+			return n.nextList
+		} else {
+			return n
+		}
 	}
-}
 */
 func (this *List) find(c rune) *ListRecBase {
 	if this.begin == nil {
