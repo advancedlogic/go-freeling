@@ -70,9 +70,9 @@ func Errorf(message string, params ...interface{}) {
 }
 
 func ErrorI(messages ...interface{}) {
-	red.Print(messages)
+	red.Print(messages...)
 }
 
 func ErrorIln(messages ...interface{}) {
-	red.Println(messages)
+	red.Println(messages...)
 }
